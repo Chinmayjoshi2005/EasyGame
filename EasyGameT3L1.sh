@@ -36,7 +36,7 @@ cat << "EOF"
 EOF
 echo -e "${NC}"
 
-# DO SUBSCRIBE TO DR ABHISHEK
+
 read -p "${ORANGE_TEXT}${BOLD_TEXT}Enter REGION_1 (example: us-west1): ${RESET_FORMAT}" REGION_1
 read -p "${ORANGE_TEXT}${BOLD_TEXT}Enter REGION_2 (example: us-central1): ${RESET_FORMAT}" REGION
 
