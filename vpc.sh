@@ -1,5 +1,12 @@
 #!/bin/bash
-set -euo pipefail
+
+# Text styles and colors
+YELLOW=$(tput setaf 3)
+BLUE=$(tput setaf 4)
+MAGENTA=$(tput setaf 5)
+BOLD=$(tput bold)
+RESET=$(tput sgr0)
+
 
 # ================= COLORS =================
 BLACK_TEXT=$'\033[0;90m'
@@ -11,8 +18,6 @@ MAGENTA_TEXT=$'\033[0;95m'
 CYAN_TEXT=$'\033[0;96m'
 WHITE_TEXT=$'\033[0;97m'
 ORANGE_TEXT=$'\033[38;5;214m'
-RESET_FORMAT=$'\033[0m'
-BOLD_TEXT=$'\033[1m'
 
 # ================= FUNCTIONS =================
 log() {
