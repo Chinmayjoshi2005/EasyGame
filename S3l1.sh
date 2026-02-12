@@ -38,16 +38,16 @@ echo -e "${NC}"
 
 # Get user input for required values
 echo "${YELLOW_TEXT}Please enter the following configuration details:${RESET}"
-read -p "${YELLOW_TEXT}Enter Zone 1: ${RESET}" ZONE_1
-read -p "${YELLOW_TEXT}Enter Zone 2: ${RESET}" ZONE_2
-read -p "${YELLOW_TEXT}Enter Region: ${RESET}" REGION_1
-read -p "${YELLOW_TEXT}Enter Region: ${RESET}" REGION_2
+read -p "${YELLOW_TEXT}Enter zone_1: ${RESET}" zone_1
+read -p "${YELLOW_TEXT}Enter zone_2: ${RESET}" zone_2
+read -p "${YELLOW_TEXT}Enter region_1: ${RESET}" region_1
+read -p "${YELLOW_TEXT}Enter region_2: ${RESET}" region_2
 
 gcloud compute instances create www-1 \
     --image-family debian-11 \
     --image-project debian-cloud \
     --machine-type e2-micro \
-    --zone ZONE_1 \
+    --zone $zone_1 \
     --tags http-tag \
     --metadata startup-script="#! /bin/bash
       apt-get update
@@ -60,7 +60,7 @@ gcloud compute instances create www-2 \
     --image-family debian-11 \
     --image-project debian-cloud \
     --machine-type e2-micro \
-    --zone ZONE_1 \
+    --zone $zone_1 \
     --tags http-tag \
     --metadata startup-script="#! /bin/bash
       apt-get update
@@ -73,7 +73,7 @@ gcloud compute instances create www-3 \
     --image-family debian-11 \
     --image-project debian-cloud \
     --machine-type e2-micro \
-    --zone ZONE_2 \
+    --zone $zone_2 \
     --tags http-tag \
     --metadata startup-script="#! /bin/bash
       apt-get update
@@ -86,7 +86,7 @@ gcloud compute instances create www-4 \
     --image-family debian-11 \
     --image-project debian-cloud \
     --machine-type e2-micro \
-    --zone ZONE_2 \
+    --zone $zone_2 \
     --tags http-tag \
     --metadata startup-script="#! /bin/bash
       apt-get update
@@ -106,27 +106,27 @@ gcloud compute addresses create lb-ip-cr \
 
 read -p "${YELLOW_TEXT}Enter Address: ${RESET}" ADDRESS
 
-gcloud compute instance-groups unmanaged create REGION_1-resources-w --zone ZONE_1
+gcloud compute instance-groups unmanaged create $region_1-resources-w --zone $zone_1
 
-gcloud compute instance-groups unmanaged create REGION_2-resources-w --zone ZONE_2
+gcloud compute instance-groups unmanaged create $region_2-resources-w --zone $zone_2
 
-gcloud compute instance-groups unmanaged add-instances REGION_1-resources-w \
+gcloud compute instance-groups unmanaged add-instances $region_1-resources-w \
     --instances www-1,www-2 \
-    --zone ZONE_1
+    --zone $zone_1
 
-gcloud compute instance-groups unmanaged add-instances REGION_2-resources-w \
+gcloud compute instance-groups unmanaged add-instances $region_2-resources-w \
     --instances www-3,www-4 \
-    --zone ZONE_2
+    --zone $zone_2
 
 gcloud compute health-checks create http http-basic-check
 
-gcloud compute instance-groups unmanaged set-named-ports REGION_1-resources-w \
+gcloud compute instance-groups unmanaged set-named-ports $region_1-resources-w \
     --named-ports http:80 \
-    --zone ZONE_1
+    --zone $zone_1
 
-gcloud compute instance-groups unmanaged set-named-ports REGION_2-resources-w \
+gcloud compute instance-groups unmanaged set-named-ports $region_2-resources-w \
     --named-ports http:80 \
-    --zone ZONE_2
+    --zone $zone_2
 
 gcloud compute backend-services create web-map-backend-service \
     --protocol HTTP \
@@ -137,16 +137,16 @@ gcloud compute backend-services add-backend web-map-backend-service \
     --balancing-mode UTILIZATION \
     --max-utilization 0.8 \
     --capacity-scaler 1 \
-    --instance-group REGION_1-resources-w \
-    --instance-group-zone ZONE_1 \
+    --instance-group $region_1-resources-w \
+    --instance-group-zone $zone_1 \
     --global
 
 gcloud compute backend-services add-backend web-map-backend-service \
     --balancing-mode UTILIZATION \
     --max-utilization 0.8 \
     --capacity-scaler 1 \
-    --instance-group REGION_2-resources-w \
-    --instance-group-zone ZONE_2 \
+    --instance-group $region_2-resources-w \
+    --instance-group-zone $zone_2 \
     --global
 
 gcloud compute url-maps create web-map \
@@ -159,12 +159,12 @@ gcloud compute addresses list
 
 
     gcloud compute forwarding-rules create http-cr-rule \
-    --address ADDRESS \
+    --address $ADDRESS \
     --global \
     --target-http-proxy http-lb-proxy \
     --ports 80
 
-
+#lab completed
 
 echo
 echo "${ORANGE_TEXT}${BOLD_TEXT}=======================================================${RESET_FORMAT}"
