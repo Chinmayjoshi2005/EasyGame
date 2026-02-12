@@ -104,6 +104,8 @@ gcloud compute addresses create lb-ip-cr \
     --ip-version=IPV4 \
     --global
 
+gcloud compute addresses list
+
 read -p "${YELLOW_TEXT}Enter Address: ${RESET}" ADDRESS
 
 gcloud compute instance-groups unmanaged create $region_1-resources-w --zone $zone_1
