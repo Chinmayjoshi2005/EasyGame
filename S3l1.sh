@@ -53,7 +53,8 @@ gcloud compute instances create www-1 \
       apt-get update
       apt-get install apache2 -y
       service apache2 restart
-      Code"
+      echo '<!doctype html><html><body><h1>www-1</h1></body></html>' | tee /var/www/html/index.html
+"
 
 gcloud compute instances create www-2 \
     --image-family debian-11 \
@@ -65,7 +66,8 @@ gcloud compute instances create www-2 \
       apt-get update
       apt-get install apache2 -y
       service apache2 restart
-      Code"
+      echo '<!doctype html><html><body><h1>www-2</h1></body></html>' | tee /var/www/html/index.html
+"
 
 gcloud compute instances create www-3 \
     --image-family debian-11 \
@@ -77,7 +79,8 @@ gcloud compute instances create www-3 \
       apt-get update
       apt-get install apache2 -y
       service apache2 restart
-      Code"
+      echo '<!doctype html><html><body><h1>www-3</h1></body></html>' | tee /var/www/html/index.html
+"
 
 gcloud compute instances create www-4 \
     --image-family debian-11 \
@@ -89,7 +92,8 @@ gcloud compute instances create www-4 \
       apt-get update
       apt-get install apache2 -y
       service apache2 restart
-      Code"
+      echo '<!doctype html><html><body><h1>www-4</h1></body></html>' | tee /var/www/html/index.html
+"
 
 gcloud compute firewall-rules create www-firewall \
     --target-tags http-tag --allow tcp:80
@@ -102,9 +106,9 @@ gcloud compute addresses create lb-ip-cr \
 
 read -p "${YELLOW_TEXT}Enter Address: ${RESET}" ADDRESS
 
-gcloud compute instance-groups unmanaged create REGION_1-resources-w --zone ZONE
+gcloud compute instance-groups unmanaged create REGION_1-resources-w --zone ZONE_1
 
-gcloud compute instance-groups unmanaged create REGION_2-resources-w --zone ZONE 2
+gcloud compute instance-groups unmanaged create REGION_2-resources-w --zone ZONE_2
 
 gcloud compute instance-groups unmanaged add-instances REGION_1-resources-w \
     --instances www-1,www-2 \
@@ -133,16 +137,16 @@ gcloud compute backend-services add-backend web-map-backend-service \
     --balancing-mode UTILIZATION \
     --max-utilization 0.8 \
     --capacity-scaler 1 \
-    --instance-group REGION-resources-w \
-    --instance-group-zone ZONE \
+    --instance-group REGION_1-resources-w \
+    --instance-group-zone ZONE_1 \
     --global
 
 gcloud compute backend-services add-backend web-map-backend-service \
     --balancing-mode UTILIZATION \
     --max-utilization 0.8 \
     --capacity-scaler 1 \
-    --instance-group REGION 2-resources-w \
-    --instance-group-zone ZONE 2 \
+    --instance-group REGION_2-resources-w \
+    --instance-group-zone ZONE_2 \
     --global
 
 gcloud compute url-maps create web-map \
