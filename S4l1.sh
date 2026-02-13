@@ -38,144 +38,356 @@ echo -e "${NC}"
 
 #lab start
 
-# Heading: Verify gcloud installed
 echo ""
-echo "${MAGENTA_TEXT}${BOLD_TEXT}🚀  STEP 1 — VERIFY gcloud INSTALLED  🚀${RESET_FORMAT}"
-echo "${MAGENTA_TEXT}${BOLD_TEXT}🔎 Checking that the Cloud SDK (gcloud) is available on this VM...${RESET_FORMAT}"
-echo
-echo "1) Verify gcloud is installed:"
-gcloud --version || { echo "gcloud not found — install Cloud SDK or use the provided VM."; exit 1; }
-
-# Heading: Authenticate default user
+echo "${CYAN_TEXT}${BOLD_TEXT}╔══════════════════════════════════════════════════════════════════╗${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}║         🎮  WELCOME TO THE GCP LAB SETUP WIZARD!  🎮             ║${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}║    This script will guide you through all the lab steps.         ║${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}╚══════════════════════════════════════════════════════════════════╝${RESET_FORMAT}"
 echo ""
-echo "${BLUE_TEXT}${BOLD_TEXT}🔐  STEP 2 — AUTHENTICATE DEFAULT USER  🔐${RESET_FORMAT}"
-echo "${BLUE_TEXT}${BOLD_TEXT}🌐 Follow the browser flow to grant gcloud access to your default account.${RESET_FORMAT}"
-echo
-echo "2) Authenticate default user (interactive). Follow the browser prompts."
-echo "   Run: gcloud auth login"
-read -p "Press ENTER after you complete gcloud auth login (or Ctrl-C to abort)..." _
 
-# Heading: Set region & zone and create lab-1
+# ============================================================
+# SECTION 1: COLLECT ALL REQUIRED VARIABLES UPFRONT
+# ============================================================
 echo ""
-echo "${ORANGE_TEXT}${BOLD_TEXT}🧭  STEP 3 — SET REGION/ZONE & CREATE lab-1  🧭${RESET_FORMAT}"
-echo "${ORANGE_TEXT}${BOLD_TEXT}📍 Provide a region and zone for the default configuration and create lab-1.${RESET_FORMAT}"
-echo
-read -p "Enter REGION (e.g. us-central1): " REGION
-read -p "Enter ZONE (e.g. us-central1-a): " ZONE
+echo "${MAGENTA_TEXT}${BOLD_TEXT}┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓${RESET_FORMAT}"
+echo "${MAGENTA_TEXT}${BOLD_TEXT}┃     📋  SECTION 1: COLLECT ALL REQUIRED VARIABLES  📋        ┃${RESET_FORMAT}"
+echo "${MAGENTA_TEXT}${BOLD_TEXT}┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛${RESET_FORMAT}"
+echo ""
+echo "${YELLOW_TEXT}${BOLD_TEXT}💡 Please enter all the required information below:${RESET_FORMAT}"
+echo ""
 
-echo "Setting compute region and zone to ${REGION}/${ZONE}"
+# Collect PROJECT_ID_1
+echo "${BLUE_TEXT}${BOLD_TEXT}🔹 PROJECT ID 1 (First Project ID)${RESET_FORMAT}"
+echo "${WHITE_TEXT}   This is your primary Google Cloud Project ID.${RESET_FORMAT}"
+read -p "   👉 Enter PROJECT_ID_1: " PROJECT_ID_1
+echo ""
+
+# Collect PROJECT_ID_2
+echo "${GREEN_TEXT}${BOLD_TEXT}🔹 PROJECT ID 2 (Second Project ID)${RESET_FORMAT}"
+echo "${WHITE_TEXT}   This is the secondary project where user2 will have access.${RESET_FORMAT}"
+read -p "   👉 Enter PROJECT_ID_2: " PROJECT_ID_2
+echo ""
+
+# Collect USER_2
+echo "${ORANGE_TEXT}${BOLD_TEXT}🔹 USER 2 (Second User Email)${RESET_FORMAT}"
+echo "${WHITE_TEXT}   This is the email address of the second user (viewer).${RESET_FORMAT}"
+read -p "   👉 Enter USER_2 email: " USER_2
+echo ""
+
+# Collect REGION
+echo "${CYAN_TEXT}${BOLD_TEXT}🔹 REGION (Compute Region)${RESET_FORMAT}"
+echo "${WHITE_TEXT}   Example: us-central1, us-east1, europe-west1${RESET_FORMAT}"
+read -p "   👉 Enter REGION: " REGION
+echo ""
+
+# Collect ZONE
+echo "${MAGENTA_TEXT}${BOLD_TEXT}🔹 ZONE (Compute Zone)${RESET_FORMAT}"
+echo "${WHITE_TEXT}   Example: us-central1-a, us-east1-b, europe-west1-b${RESET_FORMAT}"
+read -p "   👉 Enter ZONE: " ZONE
+echo ""
+
+# Collect ZONE2 (for lab-3)
+echo "${YELLOW_TEXT}${BOLD_TEXT}🔹 ZONE 2 (Zone for lab-3 instance)${RESET_FORMAT}"
+echo "${WHITE_TEXT}   This can be the same as ZONE or different.${RESET_FORMAT}"
+read -p "   👉 Enter ZONE_2 (press ENTER to use same as ZONE): " ZONE_2
+if [ -z "$ZONE_2" ]; then
+  ZONE_2="$ZONE"
+fi
+echo ""
+
+# Display summary of collected variables
+echo "${GREEN_TEXT}${BOLD_TEXT}╔══════════════════════════════════════════════════════════════════╗${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}║              ✅  VARIABLES SUMMARY  ✅                          ║${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}╠══════════════════════════════════════════════════════════════════╣${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}║  📌 PROJECT_ID_1  : ${WHITE_TEXT}${PROJECT_ID_1}${GREEN_TEXT}${BOLD_TEXT}                    ${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}║  📌 PROJECT_ID_2  : ${WHITE_TEXT}${PROJECT_ID_2}${GREEN_TEXT}${BOLD_TEXT}                    ${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}║  📌 USER_2        : ${WHITE_TEXT}${USER_2}${GREEN_TEXT}${BOLD_TEXT}                    ${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}║  📌 REGION        : ${WHITE_TEXT}${REGION}${GREEN_TEXT}${BOLD_TEXT}                    ${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}║  📌 ZONE          : ${WHITE_TEXT}${ZONE}${GREEN_TEXT}${BOLD_TEXT}                    ${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}║  📌 ZONE_2        : ${WHITE_TEXT}${ZONE_2}${GREEN_TEXT}${BOLD_TEXT}                    ${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}╚══════════════════════════════════════════════════════════════════╝${RESET_FORMAT}"
+echo ""
+read -p "   🔄 Press ENTER to continue with the lab setup (or Ctrl-C to abort)..." _
+echo ""
+
+# ============================================================
+# SECTION 2: VERIFY GCLOUD INSTALLED
+# ============================================================
+echo ""
+echo "${MAGENTA_TEXT}${BOLD_TEXT}┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓${RESET_FORMAT}"
+echo "${MAGENTA_TEXT}${BOLD_TEXT}┃        🚀  STEP 1 — VERIFY GCLOUD INSTALLED  🚀               ┃${RESET_FORMAT}"
+echo "${MAGENTA_TEXT}${BOLD_TEXT}┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛${RESET_FORMAT}"
+echo ""
+echo "${CYAN_TEXT}${BOLD_TEXT}🔎 Checking that the Cloud SDK (gcloud) is available on this VM...${RESET_FORMAT}"
+echo ""
+echo "   📋 Running: gcloud --version"
+echo ""
+gcloud --version || { echo "${RED_TEXT}${BOLD_TEXT}❌ gcloud not found — install Cloud SDK or use the provided VM.${RESET_FORMAT}"; exit 1; }
+echo ""
+echo "${GREEN_TEXT}${BOLD_TEXT}✅ gcloud is installed and ready!${RESET_FORMAT}"
+echo ""
+
+# ============================================================
+# SECTION 3: AUTHENTICATE DEFAULT USER
+# ============================================================
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}┃      🔐  STEP 2 — AUTHENTICATE DEFAULT USER  🔐               ┃${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛${RESET_FORMAT}"
+echo ""
+echo "${CYAN_TEXT}${BOLD_TEXT}🌐 Follow the browser flow to grant gcloud access to your default account.${RESET_FORMAT}"
+echo ""
+echo "   📋 Instructions:"
+echo "   ${WHITE_TEXT}1️⃣  Run: gcloud auth login${RESET_FORMAT}"
+echo "   ${WHITE_TEXT}2️⃣  A browser window will open${RESET_FORMAT}"
+echo "   ${WHITE_TEXT}3️⃣  Sign in with your Google account${RESET_FORMAT}"
+echo "   ${WHITE_TEXT}4️⃣  Grant the requested permissions${RESET_FORMAT}"
+echo ""
+read -p "   ⏳ Press ENTER after you complete gcloud auth login..." _
+echo ""
+echo "${GREEN_TEXT}${BOLD_TEXT}✅ Authentication step completed!${RESET_FORMAT}"
+echo ""
+
+# ============================================================
+# SECTION 4: SET REGION/ZONE & CREATE lab-1
+# ============================================================
+echo ""
+echo "${ORANGE_TEXT}${BOLD_TEXT}┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓${RESET_FORMAT}"
+echo "${ORANGE_TEXT}${BOLD_TEXT}┃   🧭  STEP 3 — SET REGION/ZONE & CREATE lab-1  🧭             ┃${RESET_FORMAT}"
+echo "${ORANGE_TEXT}${BOLD_TEXT}┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛${RESET_FORMAT}"
+echo ""
+echo "${CYAN_TEXT}${BOLD_TEXT}📍 Setting compute region and zone...${RESET_FORMAT}"
+echo ""
+echo "   📋 Setting region to: ${YELLOW_TEXT}${REGION}${RESET_FORMAT}"
 gcloud config set compute/region "${REGION}"
-gcloud config set compute/zone "${ZONE}"
-
-echo
-echo "${ORANGE_TEXT}${BOLD_TEXT}🛠️  Creating instance lab-1 in the configured zone...${RESET_FORMAT}"
-echo "3) Create instance lab-1 in the configured zone:"
-gcloud compute instances create lab-1 --zone "${ZONE}" --machine-type=e2-standard-2 || echo "Instance creation may have failed or already exist."
-
-# Heading: Zones listing & optional change
 echo ""
-echo "${CYAN_TEXT:-$CYAN_TEXT}${BOLD_TEXT}🧭  STEP 4 — ZONES & OPTIONAL ZONE CHANGE  🧭${RESET_FORMAT}"
-echo "${CYAN_TEXT:-$CYAN_TEXT}${BOLD_TEXT}📡 Review available zones and optionally change the current zone.${RESET_FORMAT}"
-echo
-echo "4) List available zones and optionally change zone:"
+echo "   📋 Setting zone to: ${YELLOW_TEXT}${ZONE}${RESET_FORMAT}"
+gcloud config set compute/zone "${ZONE}"
+echo ""
+echo "${GREEN_TEXT}${BOLD_TEXT}✅ Region and Zone configured!${RESET_FORMAT}"
+echo ""
+echo "${ORANGE_TEXT}${BOLD_TEXT}🛠️  Creating instance lab-1 in the configured zone...${RESET_FORMAT}"
+echo ""
+echo "   📋 Running: gcloud compute instances create lab-1 --zone ${ZONE} --machine-type=e2-standard-2"
+echo ""
+gcloud compute instances create lab-1 --zone "${ZONE}" --machine-type=e2-standard-2 || echo "${YELLOW_TEXT}${BOLD_TEXT}⚠️  Instance creation may have failed or already exist.${RESET_FORMAT}"
+echo ""
+echo "${GREEN_TEXT}${BOLD_TEXT}✅ lab-1 instance creation attempted!${RESET_FORMAT}"
+echo ""
+
+# ============================================================
+# SECTION 5: ZONES LISTING & OPTIONAL CHANGE
+# ============================================================
+echo ""
+echo "${CYAN_TEXT}${BOLD_TEXT}┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}┃     🧭  STEP 4 — ZONES & OPTIONAL ZONE CHANGE  🧭             ┃${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛${RESET_FORMAT}"
+echo ""
+echo "${CYAN_TEXT}${BOLD_TEXT}📡 Listing available zones (showing first 10)...${RESET_FORMAT}"
+echo ""
 gcloud compute zones list | sed -n '1,10p'
-read -p "Enter another ZONE to switch to (or press ENTER to keep ${ZONE}): " NEW_ZONE
+echo ""
+echo "${YELLOW_TEXT}${BOLD_TEXT}💡 Current zone: ${ZONE}${RESET_FORMAT}"
+echo ""
+read -p "   🔄 Enter another ZONE to switch to (or press ENTER to keep ${ZONE}): " NEW_ZONE
+echo ""
 if [ -n "$NEW_ZONE" ]; then
   gcloud config set compute/zone "$NEW_ZONE"
-  echo "Zone changed to $(gcloud config get-value compute/zone)"
+  ZONE="$NEW_ZONE"
+  echo "${GREEN_TEXT}${BOLD_TEXT}✅ Zone changed to: ${ZONE}${RESET_FORMAT}"
 else
-  echo "Keeping zone: $(gcloud config get-value compute/zone)"
+  echo "${GREEN_TEXT}${BOLD_TEXT}✅ Keeping zone: ${ZONE}${RESET_FORMAT}"
 fi
-
-# Heading: Create user2 configuration
 echo ""
-echo "${GREEN_TEXT}${BOLD_TEXT}👥  STEP 5 — CREATE SECOND CONFIGURATION (user2)  👥${RESET_FORMAT}"
-echo "${GREEN_TEXT}${BOLD_TEXT}🔁 Start a new gcloud configuration for the second (viewer) user.${RESET_FORMAT}"
-echo
-echo "5) Create a second gcloud configuration for user2 (interactive)."
-echo "   Run: gcloud init --no-launch-browser  -> choose 'Create a new configuration' (option 2), name it user2, then choose option to log in with the other account."
-echo
-read -p "Press ENTER once you've run gcloud init --no-launch-browser and completed login for user2..." _
 
-# Heading: Switch back to default and install helpers
+# ============================================================
+# SECTION 6: CREATE USER2 CONFIGURATION
+# ============================================================
 echo ""
-echo "${YELLOW_TEXT}${BOLD_TEXT}🛡️  STEP 6–7 — SWITCH BACK & INSTALL TOOLS  🛡️${RESET_FORMAT}"
-echo "${YELLOW_TEXT}${BOLD_TEXT}🔁 Return to default, then install jq and prepare environment variables.${RESET_FORMAT}"
-echo
-echo "6) Switch back to default configuration to grant permissions."
+echo "${GREEN_TEXT}${BOLD_TEXT}┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}┃   👥  STEP 5 — CREATE SECOND CONFIGURATION (user2)  👥        ┃${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛${RESET_FORMAT}"
+echo ""
+echo "${CYAN_TEXT}${BOLD_TEXT}🔁 Start a new gcloud configuration for the second (viewer) user.${RESET_FORMAT}"
+echo ""
+echo "   📋 Instructions:"
+echo "   ${WHITE_TEXT}1️⃣  Run: gcloud init --no-launch-browser${RESET_FORMAT}"
+echo "   ${WHITE_TEXT}2️⃣  Choose option 2: 'Create a new configuration'${RESET_FORMAT}"
+echo "   ${WHITE_TEXT}3️⃣  Name it: user2${RESET_FORMAT}"
+echo "   ${WHITE_TEXT}4️⃣  Choose option to log in with the other account${RESET_FORMAT}"
+echo "   ${WHITE_TEXT}5️⃣  Complete the authentication for USER_2: ${USER_2}${RESET_FORMAT}"
+echo ""
+read -p "   ⏳ Press ENTER once you've completed gcloud init and login for user2..." _
+echo ""
+echo "${GREEN_TEXT}${BOLD_TEXT}✅ user2 configuration created!${RESET_FORMAT}"
+echo ""
+
+# ============================================================
+# SECTION 7: SWITCH BACK TO DEFAULT & INSTALL TOOLS
+# ============================================================
+echo ""
+echo "${YELLOW_TEXT}${BOLD_TEXT}┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}┃      🛡️  STEP 6–7 — SWITCH BACK & INSTALL TOOLS  🛡️           ┃${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛${RESET_FORMAT}"
+echo ""
+echo "${CYAN_TEXT}${BOLD_TEXT}🔁 Switching back to default configuration...${RESET_FORMAT}"
+echo ""
+echo "   📋 Running: gcloud config configurations activate default"
 gcloud config configurations activate default
-
-echo
-echo "7) Install jq (needed later):"
+echo ""
+echo "${GREEN_TEXT}${BOLD_TEXT}✅ Switched to default configuration!${RESET_FORMAT}"
+echo ""
+echo "${CYAN_TEXT}${BOLD_TEXT}📦 Installing jq (needed for JSON processing)...${RESET_FORMAT}"
+echo ""
+echo "   📋 Running: sudo yum -y install epel-release && sudo yum -y install jq"
 sudo yum -y install epel-release >/dev/null 2>&1 || true
 sudo yum -y install jq >/dev/null 2>&1 || true
-echo "jq install attempted (may already be installed)."
-
-# Heading: Set PROJECTID2 and USERID2
 echo ""
-echo "${BLUE_TEXT}${BOLD_TEXT}📦  STEP 8 — SET PROJECT & USER VARIABLES  📦${RESET_FORMAT}"
-echo "${BLUE_TEXT}${BOLD_TEXT}📝 Provide the second project id and user email to persist into ~/.bashrc${RESET_FORMAT}"
-echo
-read -p "Enter PROJECTID2 (second project id): " PROJECTID2
-read -p "Enter USERID2 (second user's email): " USERID2
+echo "${GREEN_TEXT}${BOLD_TEXT}✅ jq installation attempted!${RESET_FORMAT}"
+echo ""
+
+# ============================================================
+# SECTION 8: SET PROJECT & USER VARIABLES
+# ============================================================
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}┃       📦  STEP 8 — SET PROJECT & USER VARIABLES  📦           ┃${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛${RESET_FORMAT}"
+echo ""
+echo "${CYAN_TEXT}${BOLD_TEXT}📝 Setting up environment variables...${RESET_FORMAT}"
+echo ""
+echo "   📋 PROJECT_ID_1: ${PROJECT_ID_1}"
+echo "   📋 PROJECT_ID_2: ${PROJECT_ID_2}"
+echo "   📋 USER_2: ${USER_2}"
+echo ""
 
 # Persist environment variables for convenience
-grep -q 'export PROJECTID2=' ~/.bashrc 2>/dev/null || echo "export PROJECTID2=\"${PROJECTID2}\"" >> ~/.bashrc
-grep -q 'export USERID2=' ~/.bashrc 2>/dev/null || echo "export USERID2=\"${USERID2}\"" >> ~/.bashrc
+grep -q 'export PROJECT_ID_1=' ~/.bashrc 2>/dev/null || echo "export PROJECT_ID_1=\"${PROJECT_ID_1}\"" >> ~/.bashrc
+grep -q 'export PROJECT_ID_2=' ~/.bashrc 2>/dev/null || echo "export PROJECT_ID_2=\"${PROJECT_ID_2}\"" >> ~/.bashrc
+grep -q 'export USER_2=' ~/.bashrc 2>/dev/null || echo "export USER_2=\"${USER_2}\"" >> ~/.bashrc
 . ~/.bashrc
 
-echo "Attempting to set project to PROJECTID2 (may warn if access not yet granted):"
-gcloud config set project "$PROJECTID2" || true
-
-# Heading: Grant viewer & create custom devops role
+echo "${CYAN_TEXT}${BOLD_TEXT}🔧 Setting project to PROJECT_ID_2...${RESET_FORMAT}"
+gcloud config set project "$PROJECT_ID_2" || true
 echo ""
-echo "${ORANGE_TEXT}${BOLD_TEXT}🔒  STEP 9–10 — IAM: GRANT VIEWER & CREATE/BIND devops ROLE  🔒${RESET_FORMAT}"
-echo "${ORANGE_TEXT}${BOLD_TEXT}🔐 Assign viewer and the custom devops role to USERID2 (run as admin/default).${RESET_FORMAT}"
-echo
-echo "8) Grant viewer role to user2 on PROJECTID2 (run as default user with rights):"
-gcloud projects add-iam-policy-binding "$PROJECTID2" --member "user:${USERID2}" --role=roles/viewer
+echo "${GREEN_TEXT}${BOLD_TEXT}✅ Environment variables configured!${RESET_FORMAT}"
+echo ""
 
-echo
-echo "9) Create custom devops role in PROJECTID2 (permissions for compute instance lifecycle):"
-gcloud iam roles create devops --project "$PROJECTID2" \
+# ============================================================
+# SECTION 9: GRANT VIEWER & CREATE CUSTOM DEVOPS ROLE
+# ============================================================
+echo ""
+echo "${ORANGE_TEXT}${BOLD_TEXT}┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓${RESET_FORMAT}"
+echo "${ORANGE_TEXT}${BOLD_TEXT}┃  🔒  STEP 9–10 — IAM: GRANT VIEWER & CREATE DEVOPS ROLE  🔒   ┃${RESET_FORMAT}"
+echo "${ORANGE_TEXT}${BOLD_TEXT}┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛${RESET_FORMAT}"
+echo ""
+echo "${CYAN_TEXT}${BOLD_TEXT}🔐 Assigning viewer role to USER_2 on PROJECT_ID_2...${RESET_FORMAT}"
+echo ""
+echo "   📋 Running: gcloud projects add-iam-policy-binding ${PROJECT_ID_2} --member user:${USER_2} --role=roles/viewer"
+echo ""
+gcloud projects add-iam-policy-binding "$PROJECT_ID_2" --member "user:${USER_2}" --role=roles/viewer
+echo ""
+echo "${GREEN_TEXT}${BOLD_TEXT}✅ Viewer role granted!${RESET_FORMAT}"
+echo ""
+
+echo "${CYAN_TEXT}${BOLD_TEXT}🛠️  Creating custom devops role in PROJECT_ID_2...${RESET_FORMAT}"
+echo ""
+echo "   📋 Permissions included:"
+echo "   ${WHITE_TEXT}  • compute.instances.create${RESET_FORMAT}"
+echo "   ${WHITE_TEXT}  • compute.instances.delete${RESET_FORMAT}"
+echo "   ${WHITE_TEXT}  • compute.instances.start${RESET_FORMAT}"
+echo "   ${WHITE_TEXT}  • compute.instances.stop${RESET_FORMAT}"
+echo "   ${WHITE_TEXT}  • compute.instances.update${RESET_FORMAT}"
+echo "   ${WHITE_TEXT}  • compute.disks.create${RESET_FORMAT}"
+echo "   ${WHITE_TEXT}  • compute.subnetworks.use${RESET_FORMAT}"
+echo "   ${WHITE_TEXT}  • compute.subnetworks.useExternalIp${RESET_FORMAT}"
+echo "   ${WHITE_TEXT}  • compute.instances.setMetadata${RESET_FORMAT}"
+echo "   ${WHITE_TEXT}  • compute.instances.setServiceAccount${RESET_FORMAT}"
+echo ""
+gcloud iam roles create devops --project "$PROJECT_ID_2" \
   --permissions "compute.instances.create,compute.instances.delete,compute.instances.start,compute.instances.stop,compute.instances.update,compute.disks.create,compute.subnetworks.use,compute.subnetworks.useExternalIp,compute.instances.setMetadata,compute.instances.setServiceAccount" \
-  || echo "Role creation may have failed (role may already exist)."
-
-echo
-echo "${ORANGE_TEXT}${BOLD_TEXT}🔧 Binding iam.serviceAccountUser and the custom devops role to USERID2...${RESET_FORMAT}"
-echo "10) Grant iam.serviceAccountUser to USERID2 and bind the custom devops role:"
-gcloud projects add-iam-policy-binding "$PROJECTID2" --member "user:${USERID2}" --role=roles/iam.serviceAccountUser
-gcloud projects add-iam-policy-binding "$PROJECTID2" --member "user:${USERID2}" --role="projects/${PROJECTID2}/roles/devops"
-
-# Heading: Service account creation and bindings
+  || echo "${YELLOW_TEXT}${BOLD_TEXT}⚠️  Role creation may have failed (role may already exist).${RESET_FORMAT}"
 echo ""
-echo "${MAGENTA_TEXT}${BOLD_TEXT}🤖  STEP 11 — CREATE SERVICE ACCOUNT & BIND ROLES  🤖${RESET_FORMAT}"
-echo "${MAGENTA_TEXT}${BOLD_TEXT}🔁 Create 'devops' service account and give it Service Account User + Compute InstanceAdmin roles.${RESET_FORMAT}"
-echo
-echo "11) Create a service account 'devops' and assign service account + compute roles:"
+echo "${GREEN_TEXT}${BOLD_TEXT}✅ Custom devops role created!${RESET_FORMAT}"
+echo ""
+
+echo "${CYAN_TEXT}${BOLD_TEXT}🔧 Binding iam.serviceAccountUser and devops role to USER_2...${RESET_FORMAT}"
+echo ""
+echo "   📋 Granting iam.serviceAccountUser role..."
+gcloud projects add-iam-policy-binding "$PROJECT_ID_2" --member "user:${USER_2}" --role=roles/iam.serviceAccountUser
+echo ""
+echo "   📋 Binding custom devops role..."
+gcloud projects add-iam-policy-binding "$PROJECT_ID_2" --member "user:${USER_2}" --role="projects/${PROJECT_ID_2}/roles/devops"
+echo ""
+echo "${GREEN_TEXT}${BOLD_TEXT}✅ IAM roles bound to USER_2!${RESET_FORMAT}"
+echo ""
+
+# ============================================================
+# SECTION 10: CREATE SERVICE ACCOUNT & BIND ROLES
+# ============================================================
+echo ""
+echo "${MAGENTA_TEXT}${BOLD_TEXT}┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓${RESET_FORMAT}"
+echo "${MAGENTA_TEXT}${BOLD_TEXT}┃   🤖  STEP 11 — CREATE SERVICE ACCOUNT & BIND ROLES  🤖       ┃${RESET_FORMAT}"
+echo "${MAGENTA_TEXT}${BOLD_TEXT}┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛${RESET_FORMAT}"
+echo ""
+echo "${CYAN_TEXT}${BOLD_TEXT}🔁 Creating 'devops' service account...${RESET_FORMAT}"
+echo ""
+echo "   📋 Running: gcloud iam service-accounts create devops --display-name devops"
 gcloud iam service-accounts create devops --display-name devops
+echo ""
 SA=$(gcloud iam service-accounts list --format="value(email)" --filter "displayName=devops")
-echo "Service account email: $SA"
-
-gcloud projects add-iam-policy-binding "$PROJECTID2" --member "serviceAccount:${SA}" --role=roles/iam.serviceAccountUser
-gcloud projects add-iam-policy-binding "$PROJECTID2" --member "serviceAccount:${SA}" --role=roles/compute.instanceAdmin
-
-# Heading: Create lab-3 with service account
+echo "${GREEN_TEXT}${BOLD_TEXT}✅ Service account created!${RESET_FORMAT}"
 echo ""
-echo "${CYAN_TEXT:-$CYAN_TEXT}${BOLD_TEXT}🧪  STEP 12 — CREATE lab-3 WITH SERVICE ACCOUNT  🧪${RESET_FORMAT}"
-echo "${CYAN_TEXT:-$CYAN_TEXT}${BOLD_TEXT}⚙️  Use the devops service account when creating lab-3 (may require APIs to be enabled).${RESET_FORMAT}"
-echo
-read -p "Enter ZONE2 for creating lab-3 (e.g. same region zone like us-central1-a): " ZONE2
-echo "12) Create lab-3 with the devops service account attached (may require APIs enabled):"
-gcloud compute instances create lab-3 --zone "${ZONE2}" --machine-type=e2-standard-2 --service-account "${SA}" --scopes "https://www.googleapis.com/auth/compute" || echo "lab-3 creation may have failed (check IAM/API)."
-
-# Heading: Quick verification
+echo "   📧 Service Account Email: ${YELLOW_TEXT}${SA}${RESET_FORMAT}"
 echo ""
-echo "${GREEN_TEXT}${BOLD_TEXT}✅  STEP 13 — QUICK VERIFICATION  ✅${RESET_FORMAT}"
-echo "${GREEN_TEXT}${BOLD_TEXT}🔎 List compute instances to confirm creations and attachments.${RESET_FORMAT}"
-echo
-echo "13) Quick verification: list compute instances in current project:"
+
+echo "${CYAN_TEXT}${BOLD_TEXT}🔧 Binding roles to service account...${RESET_FORMAT}"
+echo ""
+echo "   📋 Granting iam.serviceAccountUser role..."
+gcloud projects add-iam-policy-binding "$PROJECT_ID_2" --member "serviceAccount:${SA}" --role=roles/iam.serviceAccountUser
+echo ""
+echo "   📋 Granting compute.instanceAdmin role..."
+gcloud projects add-iam-policy-binding "$PROJECT_ID_2" --member "serviceAccount:${SA}" --role=roles/compute.instanceAdmin
+echo ""
+echo "${GREEN_TEXT}${BOLD_TEXT}✅ Service account roles configured!${RESET_FORMAT}"
+echo ""
+
+# ============================================================
+# SECTION 11: CREATE lab-3 WITH SERVICE ACCOUNT
+# ============================================================
+echo ""
+echo "${CYAN_TEXT}${BOLD_TEXT}┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}┃     🧪  STEP 12 — CREATE lab-3 WITH SERVICE ACCOUNT  🧪       ┃${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛${RESET_FORMAT}"
+echo ""
+echo "${CYAN_TEXT}${BOLD_TEXT}⚙️  Creating lab-3 with the devops service account attached...${RESET_FORMAT}"
+echo ""
+echo "   📋 Zone: ${ZONE_2}"
+echo "   📋 Service Account: ${SA}"
+echo ""
+echo "   📋 Running: gcloud compute instances create lab-3 --zone ${ZONE_2} --machine-type=e2-standard-2 --service-account ${SA}"
+echo ""
+gcloud compute instances create lab-3 --zone "${ZONE_2}" --machine-type=e2-standard-2 --service-account "${SA}" --scopes "https://www.googleapis.com/auth/compute" || echo "${YELLOW_TEXT}${BOLD_TEXT}⚠️  lab-3 creation may have failed (check IAM/API).${RESET_FORMAT}"
+echo ""
+echo "${GREEN_TEXT}${BOLD_TEXT}✅ lab-3 instance creation attempted!${RESET_FORMAT}"
+echo ""
+
+# ============================================================
+# SECTION 12: QUICK VERIFICATION
+# ============================================================
+echo ""
+echo "${GREEN_TEXT}${BOLD_TEXT}┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}┃            ✅  STEP 13 — QUICK VERIFICATION  ✅               ┃${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛${RESET_FORMAT}"
+echo ""
+echo "${CYAN_TEXT}${BOLD_TEXT}🔎 Listing compute instances to confirm creations...${RESET_FORMAT}"
+echo ""
+echo "   📋 Running: gcloud compute instances list"
+echo ""
 gcloud compute instances list
+echo ""
+echo "${GREEN_TEXT}${BOLD_TEXT}✅ Verification complete!${RESET_FORMAT}"
+echo ""
 
 #lab completed
 
