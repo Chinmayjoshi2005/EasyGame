@@ -225,18 +225,35 @@ echo "${GREEN_TEXT}${BOLD_TEXT}┏━━━━━━━━━━━━━━━�
 echo "${GREEN_TEXT}${BOLD_TEXT}┃   👥  STEP 5 — CREATE SECOND CONFIGURATION (user2)  👥        ┃${RESET_FORMAT}"
 echo "${GREEN_TEXT}${BOLD_TEXT}┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛${RESET_FORMAT}"
 echo ""
-echo "${CYAN_TEXT}${BOLD_TEXT}🔁 Start a new gcloud configuration for the second (viewer) user.${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}🔁 Creating a new gcloud configuration for the second (viewer) user.${RESET_FORMAT}"
+echo ""
+
+# Create user2 configuration
+echo "   📋 Creating user2 configuration..."
+gcloud config configurations create user2 --no-activate 2>/dev/null || echo "${YELLOW_TEXT}${BOLD_TEXT}⚠️  user2 configuration may already exist.${RESET_FORMAT}"
+
+echo ""
+echo "${CYAN_TEXT}${BOLD_TEXT}🔐 Now you need to authenticate USER_2: ${USER_2}${RESET_FORMAT}"
 echo ""
 echo "   📋 Instructions:"
-echo "   ${WHITE_TEXT}1️⃣  Run: gcloud init --no-launch-browser${RESET_FORMAT}"
-echo "   ${WHITE_TEXT}2️⃣  Choose option 2: 'Create a new configuration'${RESET_FORMAT}"
-echo "   ${WHITE_TEXT}3️⃣  Name it: user2${RESET_FORMAT}"
-echo "   ${WHITE_TEXT}4️⃣  Choose option to log in with the other account${RESET_FORMAT}"
-echo "   ${WHITE_TEXT}5️⃣  Complete the authentication for USER_2: ${USER_2}${RESET_FORMAT}"
+echo "   ${WHITE_TEXT}1️⃣  Run: gcloud config configurations activate user2${RESET_FORMAT}"
+echo "   ${WHITE_TEXT}2️⃣  Run: gcloud auth login${RESET_FORMAT}"
+echo "   ${WHITE_TEXT}3️⃣  Complete the authentication for USER_2: ${USER_2}${RESET_FORMAT}"
+echo "   ${WHITE_TEXT}4️⃣  Run: gcloud config set project ${PROJECT_ID_2}${RESET_FORMAT}"
+echo "   ${WHITE_TEXT}5️⃣  Run: gcloud config set compute/zone ${ZONE}${RESET_FORMAT}"
 echo ""
-read -p "   ⏳ Press ENTER once you've completed gcloud init and login for user2..." _
+read -p "   ⏳ Press ENTER once you've completed authentication for user2..." _
 echo ""
-echo "${GREEN_TEXT}${BOLD_TEXT}✅ user2 configuration created!${RESET_FORMAT}"
+
+# Set project and zone for user2 configuration
+echo "   📋 Setting project and zone for user2 configuration..."
+gcloud config configurations activate user2
+gcloud config set project "$PROJECT_ID_2"
+gcloud config set compute/zone "${ZONE}"
+gcloud config set compute/region "${REGION}"
+
+echo ""
+echo "${GREEN_TEXT}${BOLD_TEXT}✅ user2 configuration created and configured!${RESET_FORMAT}"
 echo ""
 
 # ============================================================
@@ -282,11 +299,13 @@ echo ""
 export PROJECT_ID_1="${PROJECT_ID_1}"
 export PROJECT_ID_2="${PROJECT_ID_2}"
 export USER_2="${USER_2}"
+export USERID2="${USER_2}"  # Lab expects USERID2 variable name
 
 # Persist environment variables for convenience
 grep -q 'export PROJECT_ID_1=' ~/.bashrc 2>/dev/null || echo "export PROJECT_ID_1=\"${PROJECT_ID_1}\"" >> ~/.bashrc
 grep -q 'export PROJECT_ID_2=' ~/.bashrc 2>/dev/null || echo "export PROJECT_ID_2=\"${PROJECT_ID_2}\"" >> ~/.bashrc
 grep -q 'export USER_2=' ~/.bashrc 2>/dev/null || echo "export USER_2=\"${USER_2}\"" >> ~/.bashrc
+grep -q 'export USERID2=' ~/.bashrc 2>/dev/null || echo "export USERID2=\"${USER_2}\"" >> ~/.bashrc
 
 echo "${CYAN_TEXT}${BOLD_TEXT}🔧 Setting project to PROJECT_ID_1 for default configuration...${RESET_FORMAT}"
 gcloud config set project "$PROJECT_ID_1"
@@ -301,6 +320,9 @@ echo ""
 echo "${ORANGE_TEXT}${BOLD_TEXT}┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓${RESET_FORMAT}"
 echo "${ORANGE_TEXT}${BOLD_TEXT}┃  🔒  STEP 9–10 — IAM: GRANT VIEWER & CREATE DEVOPS ROLE  🔒   ┃${RESET_FORMAT}"
 echo "${ORANGE_TEXT}${BOLD_TEXT}┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛${RESET_FORMAT}"
+echo ""
+echo "${CYAN_TEXT}${BOLD_TEXT}🔐 Setting project to PROJECT_ID_2 for IAM operations...${RESET_FORMAT}"
+gcloud config set project "$PROJECT_ID_2"
 echo ""
 echo "${CYAN_TEXT}${BOLD_TEXT}🔐 Assigning viewer role to USER_2 on PROJECT_ID_2...${RESET_FORMAT}"
 echo ""
@@ -325,8 +347,10 @@ echo "   ${WHITE_TEXT}  • compute.subnetworks.useExternalIp${RESET_FORMAT}"
 echo "   ${WHITE_TEXT}  • compute.instances.setMetadata${RESET_FORMAT}"
 echo "   ${WHITE_TEXT}  • compute.instances.setServiceAccount${RESET_FORMAT}"
 echo ""
-gcloud iam roles create devops --project "$PROJECT_ID_2" \
-  --permissions "compute.instances.create,compute.instances.delete,compute.instances.start,compute.instances.stop,compute.instances.update,compute.disks.create,compute.subnetworks.use,compute.subnetworks.useExternalIp,compute.instances.setMetadata,compute.instances.setServiceAccount" \
+gcloud iam roles create devops --project="$PROJECT_ID_2" \
+  --title="devops" \
+  --description="Custom role for devops team" \
+  --permissions="compute.instances.create,compute.instances.delete,compute.instances.start,compute.instances.stop,compute.instances.update,compute.disks.create,compute.subnetworks.use,compute.subnetworks.useExternalIp,compute.instances.setMetadata,compute.instances.setServiceAccount" \
   || echo "${YELLOW_TEXT}${BOLD_TEXT}⚠️  Role creation may have failed (role may already exist).${RESET_FORMAT}"
 echo ""
 echo "${GREEN_TEXT}${BOLD_TEXT}✅ Custom devops role created!${RESET_FORMAT}"
@@ -356,10 +380,11 @@ gcloud config set project "$PROJECT_ID_2"
 echo ""
 echo "${CYAN_TEXT}${BOLD_TEXT}🔁 Creating 'devops' service account in PROJECT_ID_2...${RESET_FORMAT}"
 echo ""
-echo "   📋 Running: gcloud iam service-accounts create devops --display-name devops --project ${PROJECT_ID_2}"
-gcloud iam service-accounts create devops --display-name devops --project "$PROJECT_ID_2" || echo "${YELLOW_TEXT}${BOLD_TEXT}⚠️  Service account may already exist.${RESET_FORMAT}"
+echo "   📋 Running: gcloud iam service-accounts create devops --display-name devops"
+gcloud iam service-accounts create devops --display-name devops || echo "${YELLOW_TEXT}${BOLD_TEXT}⚠️  Service account may already exist.${RESET_FORMAT}"
 echo ""
-SA=$(gcloud iam service-accounts list --format="value(email)" --filter "displayName=devops" --project "$PROJECT_ID_2")
+# Get service account email - construct it directly since we know the format
+SA="devops@${PROJECT_ID_2}.iam.gserviceaccount.com"
 echo "${GREEN_TEXT}${BOLD_TEXT}✅ Service account created!${RESET_FORMAT}"
 echo ""
 echo "   📧 Service Account Email: ${YELLOW_TEXT}${SA}${RESET_FORMAT}"
@@ -407,13 +432,19 @@ echo "${YELLOW_TEXT}${BOLD_TEXT}┗━━━━━━━━━━━━━━━
 echo ""
 echo "${CYAN_TEXT}${BOLD_TEXT}🔐 Switching to user2 configuration to test permissions...${RESET_FORMAT}"
 echo ""
-echo "   📋 Instructions:"
-echo "   ${WHITE_TEXT}1️⃣  Run: gcloud config configurations activate user2${RESET_FORMAT}"
-echo "   ${WHITE_TEXT}2️⃣  Run: gcloud config set project ${PROJECT_ID_2}${RESET_FORMAT}"
-echo "   ${WHITE_TEXT}3️⃣  Run: gcloud compute instances list${RESET_FORMAT}"
-echo "   ${WHITE_TEXT}4️⃣  Run: gcloud compute instances create lab-2 --zone ${ZONE} --machine-type=e2-standard-2${RESET_FORMAT}"
+gcloud config configurations activate user2
+gcloud config set project "$PROJECT_ID_2"
 echo ""
-read -p "   ⏳ Press ENTER once you've completed the user2 testing steps..." _
+echo "${CYAN_TEXT}${BOLD_TEXT}📋 Listing compute instances as user2...${RESET_FORMAT}"
+gcloud compute instances list
+echo ""
+
+echo "${CYAN_TEXT}${BOLD_TEXT}🛠️  Creating lab-2 instance in PROJECT_ID_2...${RESET_FORMAT}"
+echo ""
+echo "   📋 Running: gcloud compute instances create lab-2 --zone ${ZONE} --machine-type=e2-standard-2"
+gcloud compute instances create lab-2 --zone "${ZONE}" --machine-type=e2-standard-2 || echo "${YELLOW_TEXT}${BOLD_TEXT}⚠️  lab-2 creation may have failed or already exist.${RESET_FORMAT}"
+echo ""
+echo "${GREEN_TEXT}${BOLD_TEXT}✅ lab-2 instance creation attempted!${RESET_FORMAT}"
 echo ""
 echo "${GREEN_TEXT}${BOLD_TEXT}✅ User2 testing completed!${RESET_FORMAT}"
 echo ""
