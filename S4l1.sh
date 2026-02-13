@@ -58,37 +58,51 @@ echo ""
 
 # Collect PROJECT_ID_1
 echo "${BLUE_TEXT}${BOLD_TEXT}🔹 PROJECT ID 1 (First Project ID)${RESET_FORMAT}"
-echo "${WHITE_TEXT}   This is your primary Google Cloud Project ID.${RESET_FORMAT}"
+echo "${WHITE_TEXT}   📖 Find this in the Google Cloud Console top navigation bar.${RESET_FORMAT}"
+echo "${WHITE_TEXT}   📖 Go to: Navigation Menu > Home > Dashboard${RESET_FORMAT}"
+echo "${WHITE_TEXT}   📖 Look for 'Project info' section - copy the Project ID.${RESET_FORMAT}"
+echo "${WHITE_TEXT}   📖 Example format: qwiklabs-gcp-02-e523d969626c${RESET_FORMAT}"
 read -p "   👉 Enter PROJECT_ID_1: " PROJECT_ID_1
 echo ""
 
 # Collect PROJECT_ID_2
 echo "${GREEN_TEXT}${BOLD_TEXT}🔹 PROJECT ID 2 (Second Project ID)${RESET_FORMAT}"
-echo "${WHITE_TEXT}   This is the secondary project where user2 will have access.${RESET_FORMAT}"
+echo "${WHITE_TEXT}   📖 Click the project dropdown in the top navigation bar.${RESET_FORMAT}"
+echo "${WHITE_TEXT}   📖 Look for a second project in the list (different from PROJECT_ID_1).${RESET_FORMAT}"
+echo "${WHITE_TEXT}   📖 Example format: qwiklabs-gcp-03-75d39da6944a${RESET_FORMAT}"
 read -p "   👉 Enter PROJECT_ID_2: " PROJECT_ID_2
 echo ""
 
 # Collect USER_2
 echo "${ORANGE_TEXT}${BOLD_TEXT}🔹 USER 2 (Second User Email)${RESET_FORMAT}"
-echo "${WHITE_TEXT}   This is the email address of the second user (viewer).${RESET_FORMAT}"
+echo "${WHITE_TEXT}   📖 Find this in your lab instructions panel on the left side.${RESET_FORMAT}"
+echo "${WHITE_TEXT}   📖 Look for 'Student 2' or 'Second User' credentials.${RESET_FORMAT}"
+echo "${WHITE_TEXT}   📖 Example format: student-02-37e1d0290408@qwiklabs.net${RESET_FORMAT}"
 read -p "   👉 Enter USER_2 email: " USER_2
 echo ""
 
 # Collect REGION
 echo "${CYAN_TEXT}${BOLD_TEXT}🔹 REGION (Compute Region)${RESET_FORMAT}"
-echo "${WHITE_TEXT}   Example: us-central1, us-east1, europe-west1${RESET_FORMAT}"
+echo "${WHITE_TEXT}   📖 Check your lab instructions for the required region.${RESET_FORMAT}"
+echo "${WHITE_TEXT}   📖 Go to: Navigation Menu > Compute Engine > VM instances${RESET_FORMAT}"
+echo "${WHITE_TEXT}   📖 Look at the 'Zone' column to identify your region.${RESET_FORMAT}"
+echo "${WHITE_TEXT}   📖 Common examples: us-central1, us-east1, europe-west1, europe-west4${RESET_FORMAT}"
 read -p "   👉 Enter REGION: " REGION
 echo ""
 
 # Collect ZONE
 echo "${MAGENTA_TEXT}${BOLD_TEXT}🔹 ZONE (Compute Zone)${RESET_FORMAT}"
-echo "${WHITE_TEXT}   Example: us-central1-a, us-east1-b, europe-west1-b${RESET_FORMAT}"
+echo "${WHITE_TEXT}   📖 Check your lab instructions for the required zone.${RESET_FORMAT}"
+echo "${WHITE_TEXT}   📖 Go to: Navigation Menu > Compute Engine > VM instances${RESET_FORMAT}"
+echo "${WHITE_TEXT}   📖 Look at the 'Zone' column of your existing VM (centos-clean).${RESET_FORMAT}"
+echo "${WHITE_TEXT}   📖 Common examples: us-central1-a, us-east1-b, europe-west1-b, europe-west4-a${RESET_FORMAT}"
 read -p "   👉 Enter ZONE: " ZONE
 echo ""
 
 # Collect ZONE2 (for lab-3)
 echo "${YELLOW_TEXT}${BOLD_TEXT}🔹 ZONE 2 (Zone for lab-3 instance)${RESET_FORMAT}"
-echo "${WHITE_TEXT}   This can be the same as ZONE or different.${RESET_FORMAT}"
+echo "${WHITE_TEXT}   📖 This can be the same as ZONE or a different zone in the same region.${RESET_FORMAT}"
+echo "${WHITE_TEXT}   📖 Check lab instructions if a specific zone is required for lab-3.${RESET_FORMAT}"
 read -p "   👉 Enter ZONE_2 (press ENTER to use same as ZONE): " ZONE_2
 if [ -z "$ZONE_2" ]; then
   ZONE_2="$ZONE"
@@ -158,6 +172,9 @@ echo "${ORANGE_TEXT}${BOLD_TEXT}┗━━━━━━━━━━━━━━━
 echo ""
 echo "${CYAN_TEXT}${BOLD_TEXT}📍 Setting compute region and zone...${RESET_FORMAT}"
 echo ""
+echo "   📋 Setting project to: ${YELLOW_TEXT}${PROJECT_ID_1}${RESET_FORMAT}"
+gcloud config set project "$PROJECT_ID_1"
+echo ""
 echo "   📋 Setting region to: ${YELLOW_TEXT}${REGION}${RESET_FORMAT}"
 gcloud config set compute/region "${REGION}"
 echo ""
@@ -166,11 +183,11 @@ gcloud config set compute/zone "${ZONE}"
 echo ""
 echo "${GREEN_TEXT}${BOLD_TEXT}✅ Region and Zone configured!${RESET_FORMAT}"
 echo ""
-echo "${ORANGE_TEXT}${BOLD_TEXT}🛠️  Creating instance lab-1 in the configured zone...${RESET_FORMAT}"
+echo "${ORANGE_TEXT}${BOLD_TEXT}🛠️  Creating instance lab-1 in PROJECT_ID_1...${RESET_FORMAT}"
 echo ""
-echo "   📋 Running: gcloud compute instances create lab-1 --zone ${ZONE} --machine-type=e2-standard-2"
+echo "   📋 Running: gcloud compute instances create lab-1 --project ${PROJECT_ID_1} --zone ${ZONE} --machine-type=e2-standard-2"
 echo ""
-gcloud compute instances create lab-1 --zone "${ZONE}" --machine-type=e2-standard-2 || echo "${YELLOW_TEXT}${BOLD_TEXT}⚠️  Instance creation may have failed or already exist.${RESET_FORMAT}"
+gcloud compute instances create lab-1 --project "$PROJECT_ID_1" --zone "${ZONE}" --machine-type=e2-standard-2 || echo "${YELLOW_TEXT}${BOLD_TEXT}⚠️  Instance creation may have failed or already exist.${RESET_FORMAT}"
 echo ""
 echo "${GREEN_TEXT}${BOLD_TEXT}✅ lab-1 instance creation attempted!${RESET_FORMAT}"
 echo ""
@@ -261,14 +278,18 @@ echo "   📋 PROJECT_ID_2: ${PROJECT_ID_2}"
 echo "   📋 USER_2: ${USER_2}"
 echo ""
 
+# Export variables for immediate use
+export PROJECT_ID_1="${PROJECT_ID_1}"
+export PROJECT_ID_2="${PROJECT_ID_2}"
+export USER_2="${USER_2}"
+
 # Persist environment variables for convenience
 grep -q 'export PROJECT_ID_1=' ~/.bashrc 2>/dev/null || echo "export PROJECT_ID_1=\"${PROJECT_ID_1}\"" >> ~/.bashrc
 grep -q 'export PROJECT_ID_2=' ~/.bashrc 2>/dev/null || echo "export PROJECT_ID_2=\"${PROJECT_ID_2}\"" >> ~/.bashrc
 grep -q 'export USER_2=' ~/.bashrc 2>/dev/null || echo "export USER_2=\"${USER_2}\"" >> ~/.bashrc
-. ~/.bashrc
 
-echo "${CYAN_TEXT}${BOLD_TEXT}🔧 Setting project to PROJECT_ID_2...${RESET_FORMAT}"
-gcloud config set project "$PROJECT_ID_2" || true
+echo "${CYAN_TEXT}${BOLD_TEXT}🔧 Setting project to PROJECT_ID_1 for default configuration...${RESET_FORMAT}"
+gcloud config set project "$PROJECT_ID_1"
 echo ""
 echo "${GREEN_TEXT}${BOLD_TEXT}✅ Environment variables configured!${RESET_FORMAT}"
 echo ""
@@ -330,12 +351,15 @@ echo "${MAGENTA_TEXT}${BOLD_TEXT}┏━━━━━━━━━━━━━━�
 echo "${MAGENTA_TEXT}${BOLD_TEXT}┃   🤖  STEP 11 — CREATE SERVICE ACCOUNT & BIND ROLES  🤖       ┃${RESET_FORMAT}"
 echo "${MAGENTA_TEXT}${BOLD_TEXT}┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛${RESET_FORMAT}"
 echo ""
-echo "${CYAN_TEXT}${BOLD_TEXT}🔁 Creating 'devops' service account...${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}🔧 Setting project to PROJECT_ID_2 for service account creation...${RESET_FORMAT}"
+gcloud config set project "$PROJECT_ID_2"
 echo ""
-echo "   📋 Running: gcloud iam service-accounts create devops --display-name devops"
-gcloud iam service-accounts create devops --display-name devops
+echo "${CYAN_TEXT}${BOLD_TEXT}🔁 Creating 'devops' service account in PROJECT_ID_2...${RESET_FORMAT}"
 echo ""
-SA=$(gcloud iam service-accounts list --format="value(email)" --filter "displayName=devops")
+echo "   📋 Running: gcloud iam service-accounts create devops --display-name devops --project ${PROJECT_ID_2}"
+gcloud iam service-accounts create devops --display-name devops --project "$PROJECT_ID_2" || echo "${YELLOW_TEXT}${BOLD_TEXT}⚠️  Service account may already exist.${RESET_FORMAT}"
+echo ""
+SA=$(gcloud iam service-accounts list --format="value(email)" --filter "displayName=devops" --project "$PROJECT_ID_2")
 echo "${GREEN_TEXT}${BOLD_TEXT}✅ Service account created!${RESET_FORMAT}"
 echo ""
 echo "   📧 Service Account Email: ${YELLOW_TEXT}${SA}${RESET_FORMAT}"
@@ -362,29 +386,60 @@ echo "${CYAN_TEXT}${BOLD_TEXT}┗━━━━━━━━━━━━━━━�
 echo ""
 echo "${CYAN_TEXT}${BOLD_TEXT}⚙️  Creating lab-3 with the devops service account attached...${RESET_FORMAT}"
 echo ""
+echo "   📋 Project: ${PROJECT_ID_2}"
 echo "   📋 Zone: ${ZONE_2}"
 echo "   📋 Service Account: ${SA}"
 echo ""
-echo "   📋 Running: gcloud compute instances create lab-3 --zone ${ZONE_2} --machine-type=e2-standard-2 --service-account ${SA}"
+echo "   📋 Running: gcloud compute instances create lab-3 --project ${PROJECT_ID_2} --zone ${ZONE_2} --machine-type=e2-standard-2 --service-account ${SA}"
 echo ""
-gcloud compute instances create lab-3 --zone "${ZONE_2}" --machine-type=e2-standard-2 --service-account "${SA}" --scopes "https://www.googleapis.com/auth/compute" || echo "${YELLOW_TEXT}${BOLD_TEXT}⚠️  lab-3 creation may have failed (check IAM/API).${RESET_FORMAT}"
+gcloud compute instances create lab-3 --project "$PROJECT_ID_2" --zone "${ZONE_2}" --machine-type=e2-standard-2 --service-account "${SA}" --scopes "https://www.googleapis.com/auth/compute" || echo "${YELLOW_TEXT}${BOLD_TEXT}⚠️  lab-3 creation may have failed (check IAM/API).${RESET_FORMAT}"
 echo ""
 echo "${GREEN_TEXT}${BOLD_TEXT}✅ lab-3 instance creation attempted!${RESET_FORMAT}"
 echo ""
 
 # ============================================================
-# SECTION 12: QUICK VERIFICATION
+# SECTION 12: TEST USER2 PERMISSIONS & CREATE lab-2
+# ============================================================
+echo ""
+echo "${YELLOW_TEXT}${BOLD_TEXT}┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}┃     🧪  STEP 13 — TEST USER2 & CREATE lab-2  🧪              ┃${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛${RESET_FORMAT}"
+echo ""
+echo "${CYAN_TEXT}${BOLD_TEXT}🔐 Switching to user2 configuration to test permissions...${RESET_FORMAT}"
+echo ""
+echo "   📋 Instructions:"
+echo "   ${WHITE_TEXT}1️⃣  Run: gcloud config configurations activate user2${RESET_FORMAT}"
+echo "   ${WHITE_TEXT}2️⃣  Run: gcloud config set project ${PROJECT_ID_2}${RESET_FORMAT}"
+echo "   ${WHITE_TEXT}3️⃣  Run: gcloud compute instances list${RESET_FORMAT}"
+echo "   ${WHITE_TEXT}4️⃣  Run: gcloud compute instances create lab-2 --zone ${ZONE} --machine-type=e2-standard-2${RESET_FORMAT}"
+echo ""
+read -p "   ⏳ Press ENTER once you've completed the user2 testing steps..." _
+echo ""
+echo "${GREEN_TEXT}${BOLD_TEXT}✅ User2 testing completed!${RESET_FORMAT}"
+echo ""
+
+# ============================================================
+# SECTION 13: QUICK VERIFICATION
 # ============================================================
 echo ""
 echo "${GREEN_TEXT}${BOLD_TEXT}┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓${RESET_FORMAT}"
-echo "${GREEN_TEXT}${BOLD_TEXT}┃            ✅  STEP 13 — QUICK VERIFICATION  ✅               ┃${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}┃            ✅  STEP 14 — QUICK VERIFICATION  ✅               ┃${RESET_FORMAT}"
 echo "${GREEN_TEXT}${BOLD_TEXT}┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛${RESET_FORMAT}"
 echo ""
-echo "${CYAN_TEXT}${BOLD_TEXT}🔎 Listing compute instances to confirm creations...${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}🔎 Switching back to default configuration...${RESET_FORMAT}"
+gcloud config configurations activate default
 echo ""
-echo "   📋 Running: gcloud compute instances list"
+echo "${CYAN_TEXT}${BOLD_TEXT}🔎 Listing compute instances in PROJECT_ID_1...${RESET_FORMAT}"
 echo ""
-gcloud compute instances list
+echo "   📋 Running: gcloud compute instances list --project ${PROJECT_ID_1}"
+echo ""
+gcloud compute instances list --project "$PROJECT_ID_1"
+echo ""
+echo "${CYAN_TEXT}${BOLD_TEXT}🔎 Listing compute instances in PROJECT_ID_2...${RESET_FORMAT}"
+echo ""
+echo "   📋 Running: gcloud compute instances list --project ${PROJECT_ID_2}"
+echo ""
+gcloud compute instances list --project "$PROJECT_ID_2"
 echo ""
 echo "${GREEN_TEXT}${BOLD_TEXT}✅ Verification complete!${RESET_FORMAT}"
 echo ""
