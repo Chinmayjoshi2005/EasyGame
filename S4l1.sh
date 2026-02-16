@@ -324,6 +324,21 @@ echo "${CYAN_TEXT}${BOLD_TEXT}              TASK 5: Using a service account     
 echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
 echo ""
 
+# Ensure PROJECTID2 is available
+if [ -z "$PROJECTID2" ]; then
+    echo "${YELLOW_TEXT}${BOLD_TEXT}PROJECTID2 not set, loading from ~/.bashrc...${RESET_FORMAT}"
+    . ~/.bashrc
+fi
+
+# Verify PROJECTID2 is set
+if [ -z "$PROJECTID2" ]; then
+    echo "${RED_TEXT}${BOLD_TEXT}ERROR: PROJECTID2 is not set! Please enter it manually.${RESET_FORMAT}"
+    read -p "${BLUE_TEXT}${BOLD_TEXT}Enter PROJECTID2: ${RESET_FORMAT}" PROJECTID2
+    export PROJECTID2
+fi
+
+echo "${GREEN_TEXT}${BOLD_TEXT}Using PROJECTID2: ${PROJECTID2}${RESET_FORMAT}"
+
 echo ""
 echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
 echo "${GREEN_TEXT}${BOLD_TEXT}              Creating 'devops' service account...          ${RESET_FORMAT}"
@@ -331,11 +346,25 @@ echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━�
 echo ""
 
 echo "${CYAN_TEXT}${BOLD_TEXT}Creating 'devops' service account...${RESET_FORMAT}"
-gcloud iam service-accounts create devops --display-name devops
+# Check if service account already exists, if not create it
+if gcloud iam service-accounts describe devops@${PROJECTID2}.iam.gserviceaccount.com &>/dev/null; then
+    echo "${GREEN_TEXT}${BOLD_TEXT}Service account 'devops' already exists.${RESET_FORMAT}"
+else
+    gcloud iam service-accounts create devops --display-name devops
+fi
 
 echo "${BLUE_TEXT}${BOLD_TEXT}Retrieving service account email...${RESET_FORMAT}"
-SA=$(gcloud iam service-accounts list --format="value(email)" --filter "displayName=devops")
+# Use the direct email format instead of relying on filter
+SA="devops@${PROJECTID2}.iam.gserviceaccount.com"
 echo "${BLUE_TEXT}${BOLD_TEXT}Service Account: ${SA}${RESET_FORMAT}"
+
+# Verify the service account exists
+if ! gcloud iam service-accounts describe $SA &>/dev/null; then
+    echo "${RED_TEXT}${BOLD_TEXT}ERROR: Service account $SA does not exist!${RESET_FORMAT}"
+    echo "${YELLOW_TEXT}${BOLD_TEXT}Attempting to list available service accounts...${RESET_FORMAT}"
+    gcloud iam service-accounts list
+    exit 1
+fi
 
 echo ""
 echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
@@ -363,7 +392,31 @@ echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━�
 echo ""
 
 echo "${MAGENTA_TEXT}${BOLD_TEXT}Creating VM 'lab-3' with service account...${RESET_FORMAT}"
-gcloud compute instances create lab-3 --zone $ZONE2 --machine-type=e2-standard-2 --service-account $SA --scopes "https://www.googleapis.com/auth/compute"
+
+# Verify ZONE2 is set
+if [ -z "$ZONE2" ]; then
+    echo "${YELLOW_TEXT}${BOLD_TEXT}ZONE2 not set, loading from ~/.bashrc...${RESET_FORMAT}"
+    . ~/.bashrc
+fi
+
+if [ -z "$ZONE2" ]; then
+    echo "${RED_TEXT}${BOLD_TEXT}ERROR: ZONE2 is not set! Please enter it manually.${RESET_FORMAT}"
+    read -p "${BLUE_TEXT}${BOLD_TEXT}Enter ZONE2: ${RESET_FORMAT}" ZONE2
+    export ZONE2
+fi
+
+echo "${CYAN_TEXT}${BOLD_TEXT}Using service account: $SA${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}Using zone: $ZONE2${RESET_FORMAT}"
+
+# Verify SA variable is set
+if [ -z "$SA" ]; then
+    echo "${RED_TEXT}${BOLD_TEXT}ERROR: Service account variable SA is empty!${RESET_FORMAT}"
+    echo "${YELLOW_TEXT}${BOLD_TEXT}Re-setting SA variable...${RESET_FORMAT}"
+    SA="devops@${PROJECTID2}.iam.gserviceaccount.com"
+    echo "${GREEN_TEXT}${BOLD_TEXT}Service Account: ${SA}${RESET_FORMAT}"
+fi
+
+gcloud compute instances create lab-3 --zone "$ZONE2" --machine-type=e2-standard-2 --service-account "$SA" --scopes "https://www.googleapis.com/auth/compute"
 
 # ============================================================
 # VERIFICATION
