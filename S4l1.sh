@@ -324,39 +324,89 @@ echo "${CYAN_TEXT}${BOLD_TEXT}              TASK 5: Using a service account     
 echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
 echo ""
 
-# Ensure PROJECTID2 is available
-if [ -z "$PROJECTID2" ]; then
-    echo "${YELLOW_TEXT}${BOLD_TEXT}PROJECTID2 not set, loading from ~/.bashrc...${RESET_FORMAT}"
-    . ~/.bashrc
-fi
-
-# Verify PROJECTID2 is set
-if [ -z "$PROJECTID2" ]; then
-    echo "${RED_TEXT}${BOLD_TEXT}ERROR: PROJECTID2 is not set! Please enter it manually.${RESET_FORMAT}"
-    read -p "${BLUE_TEXT}${BOLD_TEXT}Enter PROJECTID2: ${RESET_FORMAT}" PROJECTID2
-    export PROJECTID2
-fi
-
-echo "${GREEN_TEXT}${BOLD_TEXT}Using PROJECTID2: ${PROJECTID2}${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}A service account is a special Google account that belongs to your application${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}or a virtual machine (VM) instead of to an individual end user.${RESET_FORMAT}"
+echo ""
 
 echo ""
 echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
-echo "${GREEN_TEXT}${BOLD_TEXT}              Creating 'devops' service account...          ${RESET_FORMAT}"
+echo "${MAGENTA_TEXT}${BOLD_TEXT}        Please provide the following details for Task 5:    ${RESET_FORMAT}"
 echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
 echo ""
 
-echo "${CYAN_TEXT}${BOLD_TEXT}Creating 'devops' service account...${RESET_FORMAT}"
+# Function to get Task 5 details from user
+get_task5_values() {
+    # Get PROJECTID2
+    read -p "${BLUE_TEXT}${BOLD_TEXT}Enter PROJECTID2 (target project for service account): ${RESET_FORMAT}" PROJECTID2_INPUT
+    export PROJECTID2=$PROJECTID2_INPUT
+    
+    # Get Service Account Name
+    read -p "${MAGENTA_TEXT}${BOLD_TEXT}Enter Service Account Name (default: devops): ${RESET_FORMAT}" SA_NAME
+    if [ -z "$SA_NAME" ]; then
+        SA_NAME="devops"
+    fi
+    export SA_NAME
+    
+    # Get Service Account Display Name
+    read -p "${CYAN_TEXT}${BOLD_TEXT}Enter Service Account Display Name (default: devops): ${RESET_FORMAT}" SA_DISPLAY_NAME
+    if [ -z "$SA_DISPLAY_NAME" ]; then
+        SA_DISPLAY_NAME="devops"
+    fi
+    export SA_DISPLAY_NAME
+    
+    # Save to ~/.bashrc for persistence
+    echo "export PROJECTID2=$PROJECTID2" >> ~/.bashrc
+    echo "export SA_NAME=$SA_NAME" >> ~/.bashrc
+    echo "export SA_DISPLAY_NAME=$SA_DISPLAY_NAME" >> ~/.bashrc
+    
+    echo "${GREEN_TEXT}${BOLD_TEXT}Values saved to ~/.bashrc${RESET_FORMAT}"
+}
+
+get_task5_values
+
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}              Switching to default configuration...         ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+echo "${GREEN_TEXT}${BOLD_TEXT}Switching gcloud configuration to default...${RESET_FORMAT}"
+gcloud config configurations activate default
+
+echo "${YELLOW_TEXT}${BOLD_TEXT}Setting project to ${PROJECTID2}...${RESET_FORMAT}"
+gcloud config set project $PROJECTID2
+
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}        Creating '${SA_NAME}' service account...            ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+echo "${CYAN_TEXT}${BOLD_TEXT}Creating '${SA_NAME}' service account with display name '${SA_DISPLAY_NAME}'...${RESET_FORMAT}"
 # Check if service account already exists, if not create it
-if gcloud iam service-accounts describe devops@${PROJECTID2}.iam.gserviceaccount.com &>/dev/null; then
-    echo "${GREEN_TEXT}${BOLD_TEXT}Service account 'devops' already exists.${RESET_FORMAT}"
+if gcloud iam service-accounts describe ${SA_NAME}@${PROJECTID2}.iam.gserviceaccount.com &>/dev/null; then
+    echo "${GREEN_TEXT}${BOLD_TEXT}Service account '${SA_NAME}' already exists.${RESET_FORMAT}"
 else
-    gcloud iam service-accounts create devops --display-name devops
+    gcloud iam service-accounts create $SA_NAME --display-name $SA_DISPLAY_NAME
+    echo "${GREEN_TEXT}${BOLD_TEXT}Service account '${SA_NAME}' created successfully.${RESET_FORMAT}"
 fi
 
-echo "${BLUE_TEXT}${BOLD_TEXT}Retrieving service account email...${RESET_FORMAT}"
-# Use the direct email format instead of relying on filter
-SA="devops@${PROJECTID2}.iam.gserviceaccount.com"
-echo "${BLUE_TEXT}${BOLD_TEXT}Service Account: ${SA}${RESET_FORMAT}"
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}              Checking created service account...           ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+echo "${YELLOW_TEXT}${BOLD_TEXT}Getting service account email address...${RESET_FORMAT}"
+gcloud iam service-accounts list --filter "displayName=${SA_DISPLAY_NAME}"
+
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}Retrieving service account email into variable...${RESET_FORMAT}"
+# Use the direct email format
+SA="${SA_NAME}@${PROJECTID2}.iam.gserviceaccount.com"
+export SA
+echo "export SA=$SA" >> ~/.bashrc
+echo "${BLUE_TEXT}${BOLD_TEXT}Service Account Email: ${SA}${RESET_FORMAT}"
 
 # Verify the service account exists
 if ! gcloud iam service-accounts describe $SA &>/dev/null; then
@@ -368,13 +418,18 @@ fi
 
 echo ""
 echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
-echo "${YELLOW_TEXT}${BOLD_TEXT}              Granting roles to service account...          ${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}              Granting IAM role to service account...       ${RESET_FORMAT}"
 echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
 echo ""
 
-echo "${YELLOW_TEXT}${BOLD_TEXT}Granting roles to service account...${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}Granting 'iam.serviceAccountUser' role to service account...${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}This role allows the service account to assign a service account to a compute instance.${RESET_FORMAT}"
 gcloud projects add-iam-policy-binding $PROJECTID2 --member serviceAccount:$SA --role=roles/iam.serviceAccountUser
-gcloud projects add-iam-policy-binding $PROJECTID2 --member serviceAccount:$SA --role=roles/compute.instanceAdmin
+
+echo ""
+echo "${GREEN_TEXT}${BOLD_TEXT}Task 5 - Service Account Creation Completed!${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}Service Account: ${SA}${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}Role Assigned: roles/iam.serviceAccountUser${RESET_FORMAT}"
 
 # ============================================================
 # TASK 6: Using the service account with a compute instance
@@ -385,38 +440,105 @@ echo "${YELLOW_TEXT}${BOLD_TEXT}   TASK 6: Using the service account with a comp
 echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
 echo ""
 
-echo ""
-echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
-echo "${MAGENTA_TEXT}${BOLD_TEXT}          Creating VM 'lab-3' with service account...       ${RESET_FORMAT}"
-echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}Access scopes are the legacy method of specifying permissions for your instance.${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}They define the default OAuth scopes used in requests from the gcloud tool.${RESET_FORMAT}"
 echo ""
 
-echo "${MAGENTA_TEXT}${BOLD_TEXT}Creating VM 'lab-3' with service account...${RESET_FORMAT}"
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${MAGENTA_TEXT}${BOLD_TEXT}        Please provide the following details for Task 6:    ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
 
-# Verify ZONE2 is set
-if [ -z "$ZONE2" ]; then
-    echo "${YELLOW_TEXT}${BOLD_TEXT}ZONE2 not set, loading from ~/.bashrc...${RESET_FORMAT}"
-    . ~/.bashrc
-fi
+# Function to get Task 6 details from user
+get_task6_values() {
+    # Get Instance Name
+    read -p "${BLUE_TEXT}${BOLD_TEXT}Enter Instance Name (default: lab-3): ${RESET_FORMAT}" INSTANCE_NAME
+    if [ -z "$INSTANCE_NAME" ]; then
+        INSTANCE_NAME="lab-3"
+    fi
+    export INSTANCE_NAME
+    
+    # Get Zone
+    read -p "${MAGENTA_TEXT}${BOLD_TEXT}Enter Zone for the instance (default: us-central1-c): ${RESET_FORMAT}" TASK6_ZONE
+    if [ -z "$TASK6_ZONE" ]; then
+        TASK6_ZONE="us-central1-c"
+    fi
+    export TASK6_ZONE
+    
+    # Get Machine Type
+    read -p "${CYAN_TEXT}${BOLD_TEXT}Enter Machine Type (default: e2-standard-2): ${RESET_FORMAT}" MACHINE_TYPE
+    if [ -z "$MACHINE_TYPE" ]; then
+        MACHINE_TYPE="e2-standard-2"
+    fi
+    export MACHINE_TYPE
+    
+    # Get Access Scope
+    echo ""
+    echo "${YELLOW_TEXT}${BOLD_TEXT}Common Access Scopes:${RESET_FORMAT}"
+    echo "${GREEN_TEXT}  1. compute (https://www.googleapis.com/auth/compute)${RESET_FORMAT}"
+    echo "${GREEN_TEXT}  2. cloud-platform (https://www.googleapis.com/auth/cloud-platform)${RESET_FORMAT}"
+    echo "${GREEN_TEXT}  3. storage-full (https://www.googleapis.com/auth/devstorage.full_control)${RESET_FORMAT}"
+    echo "${GREEN_TEXT}  4. storage-ro (https://www.googleapis.com/auth/devstorage.read_only)${RESET_FORMAT}"
+    echo "${GREEN_TEXT}  5. storage-rw (https://www.googleapis.com/auth/devstorage.read_write)${RESET_FORMAT}"
+    echo ""
+    read -p "${RED_TEXT}${BOLD_TEXT}Enter Access Scope URL (default: https://www.googleapis.com/auth/compute): ${RESET_FORMAT}" ACCESS_SCOPE
+    if [ -z "$ACCESS_SCOPE" ]; then
+        ACCESS_SCOPE="https://www.googleapis.com/auth/compute"
+    fi
+    export ACCESS_SCOPE
+    
+    # Save to ~/.bashrc for persistence
+    echo "export INSTANCE_NAME=$INSTANCE_NAME" >> ~/.bashrc
+    echo "export TASK6_ZONE=$TASK6_ZONE" >> ~/.bashrc
+    echo "export MACHINE_TYPE=$MACHINE_TYPE" >> ~/.bashrc
+    echo "export ACCESS_SCOPE=$ACCESS_SCOPE" >> ~/.bashrc
+    
+    echo "${GREEN_TEXT}${BOLD_TEXT}Values saved to ~/.bashrc${RESET_FORMAT}"
+}
 
-if [ -z "$ZONE2" ]; then
-    echo "${RED_TEXT}${BOLD_TEXT}ERROR: ZONE2 is not set! Please enter it manually.${RESET_FORMAT}"
-    read -p "${BLUE_TEXT}${BOLD_TEXT}Enter ZONE2: ${RESET_FORMAT}" ZONE2
-    export ZONE2
-fi
+get_task6_values
 
-echo "${CYAN_TEXT}${BOLD_TEXT}Using service account: $SA${RESET_FORMAT}"
-echo "${CYAN_TEXT}${BOLD_TEXT}Using zone: $ZONE2${RESET_FORMAT}"
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}        Granting compute.instanceAdmin role...             ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+echo "${GREEN_TEXT}${BOLD_TEXT}Granting 'compute.instanceAdmin' role to service account...${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}This role allows the service account to manage compute instances.${RESET_FORMAT}"
+gcloud projects add-iam-policy-binding $PROJECTID2 --member serviceAccount:$SA --role=roles/compute.instanceAdmin
+
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${MAGENTA_TEXT}${BOLD_TEXT}          Creating VM with service account...              ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+echo "${MAGENTA_TEXT}${BOLD_TEXT}Creating VM '${INSTANCE_NAME}' with service account...${RESET_FORMAT}"
 
 # Verify SA variable is set
 if [ -z "$SA" ]; then
     echo "${RED_TEXT}${BOLD_TEXT}ERROR: Service account variable SA is empty!${RESET_FORMAT}"
     echo "${YELLOW_TEXT}${BOLD_TEXT}Re-setting SA variable...${RESET_FORMAT}"
-    SA="devops@${PROJECTID2}.iam.gserviceaccount.com"
+    SA="${SA_NAME}@${PROJECTID2}.iam.gserviceaccount.com"
     echo "${GREEN_TEXT}${BOLD_TEXT}Service Account: ${SA}${RESET_FORMAT}"
 fi
 
-gcloud compute instances create lab-3 --zone "$ZONE2" --machine-type=e2-standard-2 --service-account "$SA" --scopes "https://www.googleapis.com/auth/compute"
+echo ""
+echo "${CYAN_TEXT}${BOLD_TEXT}Instance Configuration:${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}  - Instance Name: ${INSTANCE_NAME}${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}  - Zone: ${TASK6_ZONE}${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}  - Machine Type: ${MACHINE_TYPE}${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}  - Service Account: ${SA}${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}  - Access Scope: ${ACCESS_SCOPE}${RESET_FORMAT}"
+echo ""
+
+gcloud compute instances create $INSTANCE_NAME --zone "$TASK6_ZONE" --machine-type=$MACHINE_TYPE --service-account "$SA" --scopes "$ACCESS_SCOPE"
+
+echo ""
+echo "${GREEN_TEXT}${BOLD_TEXT}Task 6 - Compute Instance with Service Account Completed!${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}Instance '${INSTANCE_NAME}' created with service account '${SA}'${RESET_FORMAT}"
 
 # ============================================================
 # VERIFICATION
