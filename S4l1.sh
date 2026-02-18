@@ -541,6 +541,47 @@ echo "${GREEN_TEXT}${BOLD_TEXT}Task 6 - Compute Instance with Service Account Co
 echo "${GREEN_TEXT}${BOLD_TEXT}Instance '${INSTANCE_NAME}' created with service account '${SA}'${RESET_FORMAT}"
 
 # ============================================================
+# TASK 6 - VERIFICATION CHECKS
+# ============================================================
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}        TASK 6 - VERIFICATION CHECKS                        ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+# Check 1: Verify service account is bound to compute.instanceAdmin role
+echo "${YELLOW_TEXT}${BOLD_TEXT}Check 1: Verifying service account has compute.instanceAdmin role...${RESET_FORMAT}"
+echo ""
+gcloud projects get-iam-policy $PROJECTID2 --flatten="bindings[].members" --filter="bindings.members=serviceAccount:$SA" --format="table(bindings.role)" 2>/dev/null | grep -q "roles/compute.instanceAdmin"
+if [ $? -eq 0 ]; then
+    echo "${GREEN_TEXT}${BOLD_TEXT}✓ ${SA} is bound to the role 'roles/compute.instanceAdmin', good job!${RESET_FORMAT}"
+else
+    echo "${YELLOW_TEXT}${BOLD_TEXT}Checking IAM policy bindings...${RESET_FORMAT}"
+    gcloud projects get-iam-policy $PROJECTID2 --flatten="bindings[].members" --filter="bindings.members=serviceAccount:$SA"
+fi
+
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+# Check 2: Verify instance has service account attached
+echo "${YELLOW_TEXT}${BOLD_TEXT}Check 2: Verifying instance '${INSTANCE_NAME}' has service account attached...${RESET_FORMAT}"
+echo ""
+INSTANCE_SA=$(gcloud compute instances describe $INSTANCE_NAME --zone="$TASK6_ZONE" --format="value(serviceAccounts[0].email)" 2>/dev/null)
+if [ "$INSTANCE_SA" == "$SA" ]; then
+    echo "${GREEN_TEXT}${BOLD_TEXT}✓ Instance '${INSTANCE_NAME}' has service account '${SA}' attached, good job!${RESET_FORMAT}"
+else
+    echo "${YELLOW_TEXT}${BOLD_TEXT}Instance service account details:${RESET_FORMAT}"
+    gcloud compute instances describe $INSTANCE_NAME --zone="$TASK6_ZONE" --format="yaml(serviceAccounts)"
+fi
+
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}        TASK 6 VERIFICATION COMPLETED                       ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+# ============================================================
 # VERIFICATION
 # ============================================================
 echo ""
