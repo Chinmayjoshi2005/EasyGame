@@ -1,0 +1,612 @@
+#!/bin/bash
+
+# Define color variables
+BLACK_TEXT=$'\033[0;90m'
+RED_TEXT=$'\033[0;91m'
+GREEN_TEXT=$'\033[0;92m'
+YELLOW_TEXT=$'\033[0;93m'
+BLUE_TEXT=$'\033[0;94m'
+MAGENTA_TEXT=$'\033[0;95m'
+CYAN_TEXT=$'\033[0;96m'
+WHITE_TEXT=$'\033[0;97m'
+ORANGE_TEXT=$'\033[38;5;214m'  
+
+NO_COLOR=$'\033[0m'
+RESET_FORMAT=$'\033[0m'
+
+# Define text formatting variables
+BOLD_TEXT=$'\033[1m'
+UNDERLINE_TEXT=$'\033[4m'
+
+clear
+
+echo "${ORANGE_TEXT}${BOLD_TEXT}==================================================================${RESET_FORMAT}"
+echo "${ORANGE_TEXT}${BOLD_TEXT}      SUBSCRIBE TO EASY GAME FOR MORE SUCH TUTORIALS AND GUIDE    ${RESET_FORMAT}"
+echo "${ORANGE_TEXT}${BOLD_TEXT}==================================================================${RESET_FORMAT}"
+echo
+
+# Welcome message with animation
+echo -e "${CYAN}"
+cat << "EOF"
+
+╔════════════════════════════════════════════════════════════════════════════════════════════╗
+║                                                                                            ║
+║        █████████     █████████      █████████       █████████   █████       ██████████     ║
+║       ███░░░░░███  ░███░░░░░███   ░███░░░░░███     ███░░░░░███ ░░███       ░░███░░░░░█     ║
+║     ░███     ░░░  ░███      ░███ ░███      ░███  ░███     ░░░   ░███        ░███  █ ░      ║
+║     ░███          ░███      ░███ ░███      ░███  ░███           ░███        ░██████        ║
+║     ░███    █████ ░███      ░███ ░███      ░███  ░███    █████  ░███        ░███░░█        ║
+║     ░░███  ░░███  ░░███    ░███  ░░███    ░███   ░░███  ░░███   ░███     █  ░███ ░   █     ║
+║      ░░█████████   ░░█████████    ░░█████████     ░░█████████   ██████████  ██████████     ║
+║       ░░░░░░░░░     ░░░░░░░░░      ░░░░░░░░░       ░░░░░░░░░   ░░░░░░░░░░  ░░░░░░░░░░      ║
+║                                                                                            ║
+║━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━║
+║                                                                                            ║
+║               █████████   █████         █████████    █████   █████  ████████               ║
+║             ░███░░░░░███ ░░███        ░███░░░░░███  ░░███   ░░███  ░░███░░░███             ║
+║            ░███     ░░░   ░███       ░███      ░███  ░███    ░███   ░███    ░██            ║
+║            ░███           ░███       ░███      ░███  ░███    ░███   ░███     ░█            ║
+║            ░███           ░███       ░███      ░███  ░███    ░███   ░███    ░██            ║
+║            ░░███     ███  ░███     █ ░░███    ░███    ░███   ░███   ░███   ███             ║
+║             ░░█████████   ██████████  ░░█████████      ░████████    ████████               ║
+║              ░░░░░░░░░   ░░░░░░░░░░    ░░░░░░░░░        ░░░░░░░    ░░░░░░░░                ║
+║                                                                                            ║
+║━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━║
+║                                                                                            ║
+║                   █████       █████   █████   ███████████   █████   █████                  ║
+║                  ░░███       ░░███   ░░███   ░█░░░███░░░█  ░░███   ░░███                   ║
+║                   ░███   ███  ░███    ░███   ░   ░███  ░    ░███    ░███                   ║
+║                   ░███  ░███  ░███    ░███       ░███       ░███████████                   ║
+║                   ░███  ░███  ░███    ░███       ░███       ░███░░░░░███                   ║
+║                   ░███  ░███  ░███    ░███       ░███       ░███    ░███                   ║
+║                    ░░████░░ ████      █████      █████      █████   █████                  ║
+║                     ░░░░   ░░░░      ░░░░░      ░░░░░      ░░░░░   ░░░░░                   ║
+║                                                                                            ║
+║━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━║
+║                                                                                            ║
+║                █████████   █████   █████  █████  ██████   █████  █████   █████             ║
+║              ░███░░░░░███ ░░███   ░░███  ░░███  ░░██████ ░░███  ░░███   ░░███              ║
+║             ░███     ░░░   ░███    ░███   ░███   ░███░███ ░███   ░███    ░███              ║
+║             ░███           ░███████████   ░███   ░███░░███░███   ░███    ░███              ║
+║             ░███           ░███░░░░░███   ░███   ░███ ░░██████   ░███    ░███              ║
+║             ░░███     ███  ░███    ░███   ░███   ░███  ░░█████    ░███   ░███              ║
+║              ░░█████████   █████   █████  █████  █████  ░░█████    ░████████               ║
+║               ░░░░░░░░░   ░░░░░   ░░░░░  ░░░░░  ░░░░░    ░░░░░      ░░░░░░░                ║
+║                                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════════════════════╝
+
+EOF
+echo -e "${NC}"
+
+#lab start
+
+# ============================================================
+# TASK 1: Configure the gcloud environment
+# ============================================================
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}          TASK 1: Configure the gcloud environment          ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+echo "${GREEN_TEXT}${BOLD_TEXT}=== INITIATING CLOUD CONFIGURATION ===${RESET_FORMAT}"
+echo ""
+
+echo "${YELLOW_TEXT}${BOLD_TEXT}Authenticating your Google Cloud account...${RESET_FORMAT}"
+gcloud auth login --quiet
+
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${MAGENTA_TEXT}${BOLD_TEXT}              Determining Zone & Region...                  ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+export ZONE=$(gcloud compute project-info describe \
+--format="value(commonInstanceMetadata.items[google-compute-default-zone])")
+
+export REGION=$(gcloud compute project-info describe \
+--format="value(commonInstanceMetadata.items[google-compute-default-region])")
+echo "${GREEN_TEXT}${BOLD_TEXT}Default Zone: ${ZONE}${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}Default Region: ${REGION}${RESET_FORMAT}"
+
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}              Configuring gcloud settings...                ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+echo "${MAGENTA_TEXT}${BOLD_TEXT}Configuring gcloud compute settings...${RESET_FORMAT}"
+gcloud config set compute/region $REGION
+gcloud config set compute/zone $ZONE
+
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}              Creating VM instance 'lab-1'...               ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+echo "${YELLOW_TEXT}${BOLD_TEXT}Creating VM instance 'lab-1'...${RESET_FORMAT}"
+gcloud compute instances create lab-1 --zone $ZONE --machine-type=e2-standard-2
+
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}              Selecting alternative zone...                 ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+echo "${GREEN_TEXT}${BOLD_TEXT}Selecting alternative zone in ${REGION}...${RESET_FORMAT}"
+export NEWZONE=$(gcloud compute zones list --filter="name~'^$REGION'" \
+  --format="value(name)" | grep -v "^$ZONE$" | head -n 1)
+echo "${GREEN_TEXT}${BOLD_TEXT}New Zone: ${NEWZONE}${RESET_FORMAT}"
+
+echo "${RED_TEXT}${BOLD_TEXT}Updating to new zone (${NEWZONE})...${RESET_FORMAT}"
+gcloud config set compute/zone $NEWZONE
+
+# Function to prompt user to check progress
+function check_progress {
+    while true; do
+        echo
+        echo -n "${YELLOW_TEXT}${BOLD_TEXT}Have you checked Task 1 progress? (Y/N): ${RESET_FORMAT}"
+        read -r user_input
+        case $user_input in
+            [Yy]* ) 
+                echo
+                echo "${GREEN_TEXT}${BOLD_TEXT}Continuing with next steps...${RESET_FORMAT}"
+                echo
+                break
+                ;;
+            [Nn]* )
+                echo
+                echo "${RED_TEXT}${BOLD_TEXT}Please check Task 1 first${RESET_FORMAT}"
+                ;;
+            * )
+                echo
+                echo "${MAGENTA_TEXT}${BOLD_TEXT}Please enter Y or N${RESET_FORMAT}"
+                ;;
+        esac
+    done
+}
+
+echo ""
+echo "${CYAN_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}              TASK 1 PROGRESS CHECK                        ${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+check_progress
+
+# ============================================================
+# TASK 2: Create and switch between multiple IAM configurations
+# ============================================================
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}    TASK 2: Create and switch between IAM configurations    ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}              Creating 'user2' configuration...             ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+echo "${BLUE_TEXT}${BOLD_TEXT}Creating 'user2' configuration...${RESET_FORMAT}"
+gcloud config configurations create user2 --quiet
+
+echo "${YELLOW_TEXT}${BOLD_TEXT}Authenticating as 'user2'...${RESET_FORMAT}"
+gcloud auth login --no-launch-browser --quiet
+
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${MAGENTA_TEXT}${BOLD_TEXT}              Configuring 'user2' settings...               ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+echo "${MAGENTA_TEXT}${BOLD_TEXT}Configuring 'user2' settings...${RESET_FORMAT}"
+gcloud config set project $(gcloud config get-value project --configuration=default) --configuration=user2
+gcloud config set compute/zone $(gcloud config get-value compute/zone --configuration=default) --configuration=user2
+gcloud config set compute/region $(gcloud config get-value compute/region --configuration=default) --configuration=user2
+
+echo "${GREEN_TEXT}${BOLD_TEXT}Switching to 'default' configuration...${RESET_FORMAT}"
+gcloud config configurations activate default
+
+# ============================================================
+# TASK 3: Identify and assign correct IAM permissions
+# ============================================================
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${ORANGE_TEXT}${BOLD_TEXT}      TASK 3: Identify and assign correct IAM permissions    ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${RED_TEXT}${BOLD_TEXT}              Installing required packages...               ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+echo "${RED_TEXT}${BOLD_TEXT}Installing packages: epel-release and jq...${RESET_FORMAT}"
+sudo yum -y install epel-release
+sudo yum -y install jq
+
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}              Please provide the following details:         ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+get_and_export_values() {
+    read -p "${BLUE_TEXT}${BOLD_TEXT}Enter PROJECTID2: ${RESET_FORMAT}" PROJECTID2
+    read -p "${MAGENTA_TEXT}${BOLD_TEXT}Enter USERID2: ${RESET_FORMAT}" USERID2
+    read -p "${CYAN_TEXT}${BOLD_TEXT}Enter ZONE2: ${RESET_FORMAT}" ZONE2
+
+    export PROJECTID2 USERID2 ZONE2
+    echo "export PROJECTID2=$PROJECTID2" >> ~/.bashrc
+    echo "export USERID2=$USERID2" >> ~/.bashrc
+    echo "export ZONE2=$ZONE2" >> ~/.bashrc
+    echo "${GREEN_TEXT}${BOLD_TEXT}Values saved to ~/.bashrc${RESET_FORMAT}"
+}
+
+get_and_export_values
+
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}              Granting IAM roles & permissions...           ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+echo "${YELLOW_TEXT}${BOLD_TEXT}Granting 'Viewer' role to ${USERID2}...${RESET_FORMAT}"
+. ~/.bashrc
+gcloud projects add-iam-policy-binding $PROJECTID2 --member user:$USERID2 --role=roles/viewer
+
+echo "${MAGENTA_TEXT}${BOLD_TEXT}Activating 'user2' configuration...${RESET_FORMAT}"
+gcloud config configurations activate user2
+
+echo "${GREEN_TEXT}${BOLD_TEXT}Setting project to ${PROJECTID2}...${RESET_FORMAT}"
+gcloud config set project $PROJECTID2
+
+echo "${RED_TEXT}${BOLD_TEXT}Returning to 'default' configuration...${RESET_FORMAT}"
+gcloud config configurations activate default
+
+# ============================================================
+# TASK 4: Test that user2 has access
+# ============================================================
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${MAGENTA_TEXT}${BOLD_TEXT}              TASK 4: Test that user2 has access            ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}              Creating custom 'devops' role...              ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+echo "${CYAN_TEXT}${BOLD_TEXT}Creating custom 'devops' role...${RESET_FORMAT}"
+gcloud iam roles create devops --project $PROJECTID2 \
+--permissions "compute.instances.create,compute.instances.delete,compute.instances.start,compute.instances.stop,compute.instances.update,compute.disks.create,compute.subnetworks.use,compute.subnetworks.useExternalIp,compute.instances.setMetadata,compute.instances.setServiceAccount"
+
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}              Assigning roles to ${USERID2}...               ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+echo "${BLUE_TEXT}${BOLD_TEXT}Assigning roles to ${USERID2}...${RESET_FORMAT}"
+gcloud projects add-iam-policy-binding $PROJECTID2 --member user:$USERID2 --role=roles/iam.serviceAccountUser
+gcloud projects add-iam-policy-binding $PROJECTID2 --member user:$USERID2 --role=projects/$PROJECTID2/roles/devops
+
+echo "${YELLOW_TEXT}${BOLD_TEXT}Switching to 'user2' configuration...${RESET_FORMAT}"
+gcloud config configurations activate user2
+
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${MAGENTA_TEXT}${BOLD_TEXT}              Creating VM 'lab-2' in ${ZONE2}...            ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+echo "${MAGENTA_TEXT}${BOLD_TEXT}Creating VM 'lab-2' in ${ZONE2}...${RESET_FORMAT}"
+gcloud compute instances create lab-2 --zone $ZONE2 --machine-type=e2-standard-2
+
+echo "${GREEN_TEXT}${BOLD_TEXT}Final switch to 'default' configuration...${RESET_FORMAT}"
+gcloud config configurations activate default
+
+echo "${RED_TEXT}${BOLD_TEXT}Setting project to ${PROJECTID2}...${RESET_FORMAT}"
+gcloud config set project $PROJECTID2
+
+# ============================================================
+# TASK 5: Using a service account
+# ============================================================
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}              TASK 5: Using a service account               ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+echo "${YELLOW_TEXT}${BOLD_TEXT}A service account is a special Google account that belongs to your application${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}or a virtual machine (VM) instead of to an individual end user.${RESET_FORMAT}"
+echo ""
+
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${MAGENTA_TEXT}${BOLD_TEXT}        Please provide the following details for Task 5:    ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+# Function to get Task 5 details from user
+get_task5_values() {
+    # Get PROJECTID2
+    read -p "${BLUE_TEXT}${BOLD_TEXT}Enter PROJECTID2 (target project for service account): ${RESET_FORMAT}" PROJECTID2_INPUT
+    export PROJECTID2=$PROJECTID2_INPUT
+    
+    # Get Service Account Name
+    read -p "${MAGENTA_TEXT}${BOLD_TEXT}Enter Service Account Name (default: devops): ${RESET_FORMAT}" SA_NAME
+    if [ -z "$SA_NAME" ]; then
+        SA_NAME="devops"
+    fi
+    export SA_NAME
+    
+    # Get Service Account Display Name
+    read -p "${CYAN_TEXT}${BOLD_TEXT}Enter Service Account Display Name (default: devops): ${RESET_FORMAT}" SA_DISPLAY_NAME
+    if [ -z "$SA_DISPLAY_NAME" ]; then
+        SA_DISPLAY_NAME="devops"
+    fi
+    export SA_DISPLAY_NAME
+    
+    # Save to ~/.bashrc for persistence
+    echo "export PROJECTID2=$PROJECTID2" >> ~/.bashrc
+    echo "export SA_NAME=$SA_NAME" >> ~/.bashrc
+    echo "export SA_DISPLAY_NAME=$SA_DISPLAY_NAME" >> ~/.bashrc
+    
+    echo "${GREEN_TEXT}${BOLD_TEXT}Values saved to ~/.bashrc${RESET_FORMAT}"
+}
+
+get_task5_values
+
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}              Switching to default configuration...         ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+echo "${GREEN_TEXT}${BOLD_TEXT}Switching gcloud configuration to default...${RESET_FORMAT}"
+gcloud config configurations activate default
+
+echo "${YELLOW_TEXT}${BOLD_TEXT}Setting project to ${PROJECTID2}...${RESET_FORMAT}"
+gcloud config set project $PROJECTID2
+
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}        Creating '${SA_NAME}' service account...            ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+echo "${CYAN_TEXT}${BOLD_TEXT}Creating '${SA_NAME}' service account with display name '${SA_DISPLAY_NAME}'...${RESET_FORMAT}"
+# Check if service account already exists, if not create it
+if gcloud iam service-accounts describe ${SA_NAME}@${PROJECTID2}.iam.gserviceaccount.com &>/dev/null; then
+    echo "${GREEN_TEXT}${BOLD_TEXT}Service account '${SA_NAME}' already exists.${RESET_FORMAT}"
+else
+    gcloud iam service-accounts create $SA_NAME --display-name $SA_DISPLAY_NAME
+    echo "${GREEN_TEXT}${BOLD_TEXT}Service account '${SA_NAME}' created successfully.${RESET_FORMAT}"
+fi
+
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}              Checking created service account...           ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+echo "${YELLOW_TEXT}${BOLD_TEXT}Getting service account email address...${RESET_FORMAT}"
+gcloud iam service-accounts list --filter "displayName=${SA_DISPLAY_NAME}"
+
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}Retrieving service account email into variable...${RESET_FORMAT}"
+# Use the direct email format
+SA="${SA_NAME}@${PROJECTID2}.iam.gserviceaccount.com"
+export SA
+echo "export SA=$SA" >> ~/.bashrc
+echo "${BLUE_TEXT}${BOLD_TEXT}Service Account Email: ${SA}${RESET_FORMAT}"
+
+# Verify the service account exists
+if ! gcloud iam service-accounts describe $SA &>/dev/null; then
+    echo "${RED_TEXT}${BOLD_TEXT}ERROR: Service account $SA does not exist!${RESET_FORMAT}"
+    echo "${YELLOW_TEXT}${BOLD_TEXT}Attempting to list available service accounts...${RESET_FORMAT}"
+    gcloud iam service-accounts list
+    exit 1
+fi
+
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}              Granting IAM role to service account...       ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+echo "${YELLOW_TEXT}${BOLD_TEXT}Granting 'iam.serviceAccountUser' role to service account...${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}This role allows the service account to assign a service account to a compute instance.${RESET_FORMAT}"
+gcloud projects add-iam-policy-binding $PROJECTID2 --member serviceAccount:$SA --role=roles/iam.serviceAccountUser
+
+echo ""
+echo "${GREEN_TEXT}${BOLD_TEXT}Task 5 - Service Account Creation Completed!${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}Service Account: ${SA}${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}Role Assigned: roles/iam.serviceAccountUser${RESET_FORMAT}"
+
+# ============================================================
+# TASK 6: Using the service account with a compute instance
+# ============================================================
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}   TASK 6: Using the service account with a compute instance${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+echo "${YELLOW_TEXT}${BOLD_TEXT}Access scopes are the legacy method of specifying permissions for your instance.${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}They define the default OAuth scopes used in requests from the gcloud tool.${RESET_FORMAT}"
+echo ""
+
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${MAGENTA_TEXT}${BOLD_TEXT}        Please provide the following details for Task 6:    ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+# Function to get Task 6 details from user
+get_task6_values() {
+    # Get Instance Name
+    read -p "${BLUE_TEXT}${BOLD_TEXT}Enter Instance Name (default: lab-3): ${RESET_FORMAT}" INSTANCE_NAME
+    if [ -z "$INSTANCE_NAME" ]; then
+        INSTANCE_NAME="lab-3"
+    fi
+    export INSTANCE_NAME
+    
+    # Get Zone
+    read -p "${MAGENTA_TEXT}${BOLD_TEXT}Enter Zone for the instance (default: us-central1-c): ${RESET_FORMAT}" TASK6_ZONE
+    if [ -z "$TASK6_ZONE" ]; then
+        TASK6_ZONE="us-central1-c"
+    fi
+    export TASK6_ZONE
+    
+    # Get Machine Type
+    read -p "${CYAN_TEXT}${BOLD_TEXT}Enter Machine Type (default: e2-standard-2): ${RESET_FORMAT}" MACHINE_TYPE
+    if [ -z "$MACHINE_TYPE" ]; then
+        MACHINE_TYPE="e2-standard-2"
+    fi
+    export MACHINE_TYPE
+    
+    # Get Access Scope
+    echo ""
+    echo "${YELLOW_TEXT}${BOLD_TEXT}Common Access Scopes:${RESET_FORMAT}"
+    echo "${GREEN_TEXT}  1. compute (https://www.googleapis.com/auth/compute)${RESET_FORMAT}"
+    echo "${GREEN_TEXT}  2. cloud-platform (https://www.googleapis.com/auth/cloud-platform)${RESET_FORMAT}"
+    echo "${GREEN_TEXT}  3. storage-full (https://www.googleapis.com/auth/devstorage.full_control)${RESET_FORMAT}"
+    echo "${GREEN_TEXT}  4. storage-ro (https://www.googleapis.com/auth/devstorage.read_only)${RESET_FORMAT}"
+    echo "${GREEN_TEXT}  5. storage-rw (https://www.googleapis.com/auth/devstorage.read_write)${RESET_FORMAT}"
+    echo ""
+    read -p "${RED_TEXT}${BOLD_TEXT}Enter Access Scope URL (default: https://www.googleapis.com/auth/compute): ${RESET_FORMAT}" ACCESS_SCOPE
+    if [ -z "$ACCESS_SCOPE" ]; then
+        ACCESS_SCOPE="https://www.googleapis.com/auth/compute"
+    fi
+    export ACCESS_SCOPE
+    
+    # Save to ~/.bashrc for persistence
+    echo "export INSTANCE_NAME=$INSTANCE_NAME" >> ~/.bashrc
+    echo "export TASK6_ZONE=$TASK6_ZONE" >> ~/.bashrc
+    echo "export MACHINE_TYPE=$MACHINE_TYPE" >> ~/.bashrc
+    echo "export ACCESS_SCOPE=$ACCESS_SCOPE" >> ~/.bashrc
+    
+    echo "${GREEN_TEXT}${BOLD_TEXT}Values saved to ~/.bashrc${RESET_FORMAT}"
+}
+
+get_task6_values
+
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}        Granting compute.instanceAdmin role...             ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+echo "${GREEN_TEXT}${BOLD_TEXT}Granting 'compute.instanceAdmin' role to service account...${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}This role allows the service account to manage compute instances.${RESET_FORMAT}"
+gcloud projects add-iam-policy-binding $PROJECTID2 --member serviceAccount:$SA --role=roles/compute.instanceAdmin
+
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${MAGENTA_TEXT}${BOLD_TEXT}          Creating VM with service account...              ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+echo "${MAGENTA_TEXT}${BOLD_TEXT}Creating VM '${INSTANCE_NAME}' with service account...${RESET_FORMAT}"
+
+# Verify SA variable is set
+if [ -z "$SA" ]; then
+    echo "${RED_TEXT}${BOLD_TEXT}ERROR: Service account variable SA is empty!${RESET_FORMAT}"
+    echo "${YELLOW_TEXT}${BOLD_TEXT}Re-setting SA variable...${RESET_FORMAT}"
+    SA="${SA_NAME}@${PROJECTID2}.iam.gserviceaccount.com"
+    echo "${GREEN_TEXT}${BOLD_TEXT}Service Account: ${SA}${RESET_FORMAT}"
+fi
+
+echo ""
+echo "${CYAN_TEXT}${BOLD_TEXT}Instance Configuration:${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}  - Instance Name: ${INSTANCE_NAME}${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}  - Zone: ${TASK6_ZONE}${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}  - Machine Type: ${MACHINE_TYPE}${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}  - Service Account: ${SA}${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}  - Access Scope: ${ACCESS_SCOPE}${RESET_FORMAT}"
+echo ""
+
+gcloud compute instances create $INSTANCE_NAME --zone "$TASK6_ZONE" --machine-type=$MACHINE_TYPE --service-account "$SA" --scopes "$ACCESS_SCOPE"
+
+echo ""
+echo "${GREEN_TEXT}${BOLD_TEXT}Task 6 - Compute Instance with Service Account Completed!${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}Instance '${INSTANCE_NAME}' created with service account '${SA}'${RESET_FORMAT}"
+
+# ============================================================
+# TASK 6 - VERIFICATION CHECKS
+# ============================================================
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}        TASK 6 - VERIFICATION CHECKS                        ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+# Check 1: Verify service account is bound to compute.instanceAdmin role
+echo "${YELLOW_TEXT}${BOLD_TEXT}Check 1: Verifying service account has compute.instanceAdmin role...${RESET_FORMAT}"
+echo ""
+gcloud projects get-iam-policy $PROJECTID2 --flatten="bindings[].members" --filter="bindings.members=serviceAccount:$SA" --format="table(bindings.role)" 2>/dev/null | grep -q "roles/compute.instanceAdmin"
+if [ $? -eq 0 ]; then
+    echo "${GREEN_TEXT}${BOLD_TEXT}✓ ${SA} is bound to the role 'roles/compute.instanceAdmin', good job!${RESET_FORMAT}"
+else
+    echo "${YELLOW_TEXT}${BOLD_TEXT}Checking IAM policy bindings...${RESET_FORMAT}"
+    gcloud projects get-iam-policy $PROJECTID2 --flatten="bindings[].members" --filter="bindings.members=serviceAccount:$SA"
+fi
+
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+# Check 2: Verify instance has service account attached
+echo "${YELLOW_TEXT}${BOLD_TEXT}Check 2: Verifying instance '${INSTANCE_NAME}' has service account attached...${RESET_FORMAT}"
+echo ""
+INSTANCE_SA=$(gcloud compute instances describe $INSTANCE_NAME --zone="$TASK6_ZONE" --format="value(serviceAccounts[0].email)" 2>/dev/null)
+if [ "$INSTANCE_SA" == "$SA" ]; then
+    echo "${GREEN_TEXT}${BOLD_TEXT}✓ Instance '${INSTANCE_NAME}' has service account '${SA}' attached, good job!${RESET_FORMAT}"
+else
+    echo "${YELLOW_TEXT}${BOLD_TEXT}Instance service account details:${RESET_FORMAT}"
+    gcloud compute instances describe $INSTANCE_NAME --zone="$TASK6_ZONE" --format="yaml(serviceAccounts)"
+fi
+
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}        TASK 6 VERIFICATION COMPLETED                       ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+# ============================================================
+# VERIFICATION
+# ============================================================
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}              LAB COMPLETED - VERIFICATION                  ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+echo "${CYAN_TEXT}${BOLD_TEXT}Listing all configurations:${RESET_FORMAT}"
+gcloud config configurations list
+echo ""
+
+echo "${CYAN_TEXT}${BOLD_TEXT}Listing compute instances:${RESET_FORMAT}"
+gcloud compute instances list
+echo ""
+
+#lab completed
+
+echo ""
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}              LAB COMPLETED SUCCESSFULLY!                   ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo ""
+
+echo ""
+echo "${ORANGE_TEXT}${BOLD_TEXT}Subscribe for more: https://www.youtube.com/@ChinuAi-999${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}Don't forget to Like, Share and Subscribe for more Videos${RESET_FORMAT}"
+echo ""
