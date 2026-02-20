@@ -81,8 +81,8 @@ echo -e "${NC}"
 #lab start
 
 # ╔═══════════════════════════════════════════════════════════════════════════╗
-# ║                   TASK 1: GET ZONE INFO & NETWORK SETUP                   ║
-# ║            Getting Zone Configuration and Creating VPC Network            ║
+# ║                 🚀 TASK 1: GET ZONE INFO & NETWORK SETUP                  ║
+# ║         Getting Zone Configuration and Creating VPC Network               ║
 # ╚═══════════════════════════════════════════════════════════════════════════╝
 echo
 echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
@@ -164,6 +164,94 @@ gcloud compute instances create mynet-second-vm \
   --reservation-affinity=any
 
 echo "${GREEN_TEXT}✔ Second VM created successfully.${RESET_FORMAT}"
+
+# ╔═══════════════════════════════════════════════════════════════════════════╗
+# ║            🚀 TASK 4: CREATE VM IN CUSTOM NETWORK (NON-DEFAULT)           ║
+# ║         Creating VM Instance in Different Network with Dynamic Inputs     ║
+# ╚═══════════════════════════════════════════════════════════════════════════╝
+echo
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}  📋 Task 4 Starts: Creating VM in Custom Network              ${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET_FORMAT}"
+echo
+
+# Get dynamic inputs from user
+echo "${YELLOW_TEXT}${BOLD_TEXT}📝 Please enter VM configuration details:${RESET_FORMAT}"
+echo
+read -p "${YELLOW_TEXT}Enter Region (e.g., us-east1): ${RESET_FORMAT}" VM_REGION
+read -p "${YELLOW_TEXT}Enter Zone (e.g., us-east1-d): ${RESET_FORMAT}" VM_ZONE
+read -p "${YELLOW_TEXT}Enter Machine Type (e.g., e2-micro): ${RESET_FORMAT}" MACHINE_TYPE
+read -p "${YELLOW_TEXT}Enter Network Name (not default): ${RESET_FORMAT}" VM_NETWORK
+
+# Derive zone from region if not provided
+if [ -z "$VM_ZONE" ]; then
+    VM_ZONE="${VM_REGION}-d"
+fi
+
+echo
+echo "${CYAN_TEXT}🔍 Configuration Summary:${RESET_FORMAT}"
+echo "   • Region: ${GREEN_TEXT}$VM_REGION${RESET_FORMAT}"
+echo "   • Zone: ${GREEN_TEXT}$VM_ZONE${RESET_FORMAT}"
+echo "   • Machine Type: ${GREEN_TEXT}$MACHINE_TYPE${RESET_FORMAT}"
+echo "   • Network: ${GREEN_TEXT}$VM_NETWORK${RESET_FORMAT}"
+echo
+
+# Get subnet for the selected region
+SUBNET=$(gcloud compute networks subnets list \
+    --filter="network:$VM_NETWORK region:$VM_REGION" \
+    --format="value(name)" 2>/dev/null | head -n1)
+
+if [ -z "$SUBNET" ]; then
+    echo "${YELLOW_TEXT}⚠ No subnet found for $VM_REGION in $VM_NETWORK. Using auto-subnet...${RESET_FORMAT}"
+    VM_SUBNET="$VM_NETWORK"
+else
+    VM_SUBNET="$SUBNET"
+fi
+
+echo "${CYAN_TEXT}💻 Creating VM instance in custom network: $VM_NETWORK...${RESET_FORMAT}"
+gcloud compute instances create custom-net-vm \
+  --project=$DEVSHELL_PROJECT_ID \
+  --zone=$VM_ZONE \
+  --machine-type=$MACHINE_TYPE \
+  --network-interface=network-tier=PREMIUM,stack-type=IPV4_ONLY,subnet=$VM_SUBNET,network=$VM_NETWORK \
+  --metadata=enable-oslogin=true \
+  --maintenance-policy=MIGRATE \
+  --provisioning-model=STANDARD \
+  --create-disk=auto-delete=yes,boot=yes,device-name=custom-net-vm,image=projects/debian-cloud/global/images/debian-11-bullseye-v20230509,mode=rw,size=10,type=projects/$DEVSHELL_PROJECT_ID/zones/$VM_ZONE/diskTypes/pd-balanced \
+  --no-shielded-secure-boot \
+  --shielded-vtpm \
+  --shielded-integrity-monitoring \
+  --labels=goog-ec-src=vm_add-gcloud \
+  --reservation-affinity=any 2>/dev/null || {
+
+    echo "${YELLOW_TEXT}⚠ Resource quota may be limited. Trying alternative zone...${RESET_FORMAT}"
+    ALT_ZONE="${VM_REGION}-b"
+    gcloud compute instances create custom-net-vm \
+      --project=$DEVSHELL_PROJECT_ID \
+      --zone=$ALT_ZONE \
+      --machine-type=$MACHINE_TYPE \
+      --network-interface=network-tier=PREMIUM,stack-type=IPV4_ONLY,subnet=$VM_SUBNET,network=$VM_NETWORK \
+      --metadata=enable-oslogin=true \
+      --maintenance-policy=MIGRATE \
+      --provisioning-model=STANDARD \
+      --create-disk=auto-delete=yes,boot=yes,device-name=custom-net-vm,image=projects/debian-cloud/global/images/debian-11-bullseye-v20230509,mode=rw,size=10,type=projects/$DEVSHELL_PROJECT_ID/zones/$ALT_ZONE/diskTypes/pd-balanced \
+      --no-shielded-secure-boot \
+      --shielded-vtpm \
+      --shielded-integrity-monitoring \
+      --labels=goog-ec-src=vm_add-gcloud \
+      --reservation-affinity=any
+}
+
+# Get the internal IP assigned
+INTERNAL_IP=$(gcloud compute instances describe custom-net-vm \
+    --zone=$VM_ZONE \
+    --format="value(networkInterfaces[0].networkIP)" 2>/dev/null || echo "N/A")
+
+echo
+echo "${GREEN_TEXT}✔ VM created successfully in custom network!${RESET_FORMAT}"
+echo "${CYAN_TEXT}📍 Internal IP assigned: ${GREEN_TEXT}$INTERNAL_IP${RESET_FORMAT}"
+echo
+echo "${MAGENTA_TEXT}💡 Note: External IP addresses are ephemeral and will be released when the instance is stopped.${RESET_FORMAT}"
 
 #lab completed
 
